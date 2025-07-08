@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+body {
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  color: #fff;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Animated SVG gradient overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 70% 30%, rgba(78,168,255,0.18) 0%, rgba(44,83,100,0.05) 60%, transparent 100%),
+              radial-gradient(circle at 20% 80%, rgba(44,83,100,0.12) 0%, transparent 80%);
+  animation: gradientMove 12s ease-in-out infinite alternate;
+}
+@keyframes gradientMove {
+  0% { background-position: 70% 30%, 20% 80%; }
+  100% { background-position: 60% 40%, 30% 70%; }
+}
+
+/* Soft noise overlay */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: url('https://www.transparenttextures.com/patterns/noise.png');
+  opacity: 0.13;
+}
+
+/* Logo/monogram placeholder */
+.logo {
+  position: fixed;
+  top: 24px;
+  left: 32px;
+  z-index: 10;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #4EA8FF;
+  text-shadow: 0 2px 12px #4EA8FF44;
+  user-select: none;
+  pointer-events: none;
+}
+
+input, button {
+  font-family: inherit;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+input {
+  background: rgba(35, 39, 42, 0.85);
+  color: #fff;
+  padding: 0.75em 1em;
+  margin: 0.5em 0;
+  border: 1px solid #23272A;
+  width: 250px;
+  transition: border 0.2s;
+  font-weight: 400;
+}
+input:focus {
+  border: 1.5px solid #4EA8FF;
+}
+
+button {
+  background: #4EA8FF;
+  color: #fff;
+  padding: 0.75em 2em;
+  margin-top: 1em;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s;
+  letter-spacing: 0.5px;
+}
+button:hover {
+  background: #2563eb;
+}
+
+.card {
+  background: rgba(35, 39, 42, 0.55);
+  border-radius: 28px;
+  box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.22);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 3em 2.5em 2.5em 2.5em;
+  max-width: 1100px;
+  margin: 5em auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+  z-index: 2;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+/* Divider between form and table */
+.dashboard-content::before {
+  /* Removed vertical divider for cleaner look */
+  display: none;
+}
+
+h2 {
+  font-size: 2.8rem;
+  font-weight: 300;
+  margin-bottom: 1.5em;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.5em;
+  color: #4EA8FF;
+  text-align: left;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+label {
+  font-size: 1.1rem;
+  margin-bottom: 0.5em;
+  display: block;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+form label {
+  margin-bottom: 1.2em;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-content {
+    flex-direction: column;
+    gap: 2em;
+  }
+  .dashboard-content::before {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .nav-tabs {
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 0.7em 0 0.7em 0;
+    font-size: 0.95rem;
+    border-radius: 0 0 16px 16px;
+  }
+  .nav-tabs a {
+    padding: 0.5em 0.8em;
+    font-size: 1rem;
+  }
+  .card {
+    max-width: 99vw;
+    padding: 1em 0.3em;
+    margin: 2em auto 0 auto;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1rem;
+  }
+  button, .dashboard-form button {
+    font-size: 1rem;
+    padding: 0.7em 1.2em;
+  }
+}
+
+@media (max-width: 500px) {
+  .card {
+    max-width: 99vw;
+    padding: 0.7em 0.1em;
+  }
+  input {
+    width: 95vw;
+    max-width: 99vw;
+    font-size: 1rem;
+  }
+  h2 {
+    font-size: 1.3rem;
+  }
+  h3 {
+    font-size: 0.95rem;
+  }
+}
+
+/* Make tables horizontally scrollable on mobile */
+@media (max-width: 900px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+    min-width: 400px;
+    font-size: 0.95rem;
+  }
+}
+
+table {
+  width: 100%;
+  color: #fff;
+  border-collapse: collapse;
+  font-size: 1rem;
+  margin-top: 1em;
+}
+thead th {
+  padding: 14px 8px;
+  background: rgba(35, 39, 42, 0.85);
+  border-bottom: 2px solid #4EA8FF;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+tbody td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #23272A;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+tbody tr:hover td {
+  background: rgba(78,168,255,0.08);
+  box-shadow: 0 2px 12px #4EA8FF22;
+}
+tbody tr:last-child td {
+  border-bottom: none;
+}
+tfoot td {
+  font-weight: bold;
+  background: #23272A;
+  border-top: 2px solid #4EA8FF;
+}
+
+/* Animated gradient button */
+button, .dashboard-form button {
+  background: linear-gradient(90deg, #4EA8FF 0%, #2563eb 100%);
+  color: #fff;
+  padding: 0.75em 2em;
+  margin-top: 1em;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+button:after, .dashboard-form button:after {
+  content: '';
+  position: absolute;
+  left: -75%;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.18) 0%, rgba(78,168,255,0.12) 100%);
+  transform: skewX(-20deg);
+  transition: left 0.4s cubic-bezier(.4,2,.6,1);
+  z-index: 1;
+}
+button:hover:after, .dashboard-form button:hover:after {
+  left: 120%;
+}
