@@ -650,9 +650,9 @@
 .dashboard-bulk-btn {
   display: block !important;
   width: 100% !important;
-  margin: 16px 0 0 0 !important;
-  background: #23272A !important;
-  color: #4EA8FF !important;
+  margin-top: 24px !important;
+  background: linear-gradient(135deg, #4EA8FF 0%, #2563eb 100%) !important;
+  color: #fff !important;
   font-weight: 600 !important;
   border: none !important;
   border-radius: 12px !important;
@@ -661,7 +661,7 @@
   text-decoration: none !important;
   min-height: 52px !important;
   font-size: 1.1rem !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+  box-shadow: 0 4px 16px rgba(78,168,255,0.3) !important;
   transition: all 0.2s ease !important;
   align-self: center !important;
 }
