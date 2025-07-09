@@ -245,47 +245,13 @@ export default function Settings() {
       <div style={{ marginBottom: 32 }}>
         <h3>Weekly Off Days</h3>
         <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
-          Select days of the week that should automatically be marked as "OFF" in new months. 
-          This will only apply to months from the effective date forward.
+          Set days of the week that should automatically be marked as "OFF" in new months.
         </p>
-        <div style={{ marginBottom: 16 }}>
-          <label style={{ display: 'block', marginBottom: 8 }}>
-            Effective Date (from when this applies):
-          </label>
-          <input 
-            type="date" 
-            value={offDaysEffectiveDate} 
-            onChange={e => setOffDaysEffectiveDate(e.target.value)} 
-            style={{ padding: 8, borderRadius: 6, border: '1px solid #ddd' }}
-          />
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <label style={{ display: 'block', marginBottom: 8 }}>Select Off Days:</label>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(day => (
-              <label key={day} style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: 8, 
-                padding: '8px 12px', 
-                borderRadius: 6, 
-                border: `2px solid ${weeklyOffDays.includes(day) ? '#4EA8FF' : '#ddd'}`,
-                background: weeklyOffDays.includes(day) ? 'rgba(78,168,255,0.1)' : 'transparent',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}>
-                <input 
-                  type="checkbox" 
-                  checked={weeklyOffDays.includes(day)} 
-                  onChange={() => toggleOffDay(day)} 
-                  style={{ transform: 'scale(1.2)' }}
-                />
-                {day}
-              </label>
-            ))}
-          </div>
-        </div>
-        <button onClick={handleSaveWeeklyOffDays}>Save Weekly Off Days</button>
+        <Link to="/settings/weekly-off-days">
+          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
+            Set Weekly Off Days
+          </button>
+        </Link>
       </div>
       <div style={{ marginBottom: 32 }}>
         <Link to="/pay-structure">

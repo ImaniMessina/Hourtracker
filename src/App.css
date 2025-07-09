@@ -451,3 +451,319 @@
     user-select: none;
   }
 }
+
+/* --- Dashboard Responsive Top Bar --- */
+.dashboard-topbar {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  margin-bottom: 2.5em !important;
+  gap: 24px !important;
+  position: relative !important;
+}
+.dashboard-heading-wrap {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+.dashboard-monthyear {
+  font-size: 2.2rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 2px !important;
+  color: #4EA8FF !important;
+  text-shadow: 0 0 16px #4EA8FF55 !important;
+  text-align: left !important;
+  word-break: break-word !important;
+  margin-bottom: 0.2em !important;
+}
+.dashboard-progress-row {
+  margin-top: 0.5em !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+  flex-wrap: wrap !important;
+}
+.dashboard-progress-circle {
+  width: 90px !important;
+  height: 90px !important;
+  box-shadow: 0 0 24px #4EA8FF44 !important;
+  border-radius: 50% !important;
+  background: rgba(24,26,27,0.7) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.dashboard-total-label {
+  font-size: 1rem !important;
+  letter-spacing: 1px !important;
+  color: #fff !important;
+  opacity: 0.7 !important;
+  margin-left: 8px !important;
+}
+.dashboard-goal-box {
+  min-width: 220px !important;
+  text-align: center !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 1.25rem !important;
+  background: rgba(24,26,27,0.7) !important;
+  border-radius: 18px !important;
+  padding: 1.2em 1em !important;
+  box-shadow: 0 2px 12px #4EA8FF22 !important;
+  margin-right: 16px !important;
+}
+.dashboard-logout-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: absolute !important;
+  top: 24px !important;
+  right: 24px !important;
+  z-index: 2 !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  transition: background 0.2s !important;
+}
+.dashboard-logout-btn:focus {
+  outline: 2px solid #4EA8FF !important;
+}
+
+/* --- Date Row --- */
+.dashboard-date-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 1.2em !important;
+}
+.dashboard-today-btn {
+  margin: 0 !important;
+  padding: 0.8em 1.2em !important;
+  font-size: 0.95em !important;
+  border-radius: 8px !important;
+  background: #23272A !important;
+  color: #4EA8FF !important;
+  border: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
+  cursor: pointer !important;
+  min-height: 44px !important;
+  white-space: nowrap !important;
+  transition: background 0.2s, color 0.2s !important;
+}
+.dashboard-today-btn:focus {
+  outline: 2px solid #4EA8FF !important;
+}
+
+/* --- Divider between form and table --- */
+.dashboard-content.with-divider {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 48px !important;
+  position: relative !important;
+}
+.dashboard-content.with-divider::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 2px !important;
+  background: linear-gradient(to bottom, #4EA8FF22 0%, #23272A44 100%) !important;
+  border-radius: 2px !important;
+  z-index: 1 !important;
+}
+.dashboard-form, .dashboard-table-section {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* --- Table Section --- */
+.dashboard-table-section {
+  flex: 2 !important;
+  margin-top: 0 !important;
+  background: rgba(24, 26, 27, 0.85) !important;
+  border-radius: 18px !important;
+  padding: 2em 1.5em !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10) !important;
+  overflow-x: auto !important;
+  position: relative !important;
+  WebkitOverflowScrolling: touch !important;
+}
+
+/* --- Icon Alignment --- */
+.icon-align {
+  vertical-align: middle !important;
+  margin-right: 8px !important;
+  display: inline-block !important;
+  position: relative !important;
+  top: -1px !important;
+}
+
+/* --- Dashboard Form --- */
+.dashboard-form {
+  min-width: 320px !important;
+  max-width: 400px !important;
+  flex: 1 !important;
+  background: rgba(24,26,27,0.7) !important;
+  border-radius: 16px !important;
+  padding: 2em 1.5em !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10) !important;
+}
+
+/* --- Off Day Label --- */
+.dashboard-off-label {
+  margin-top: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 0.8em 0 !important;
+  cursor: pointer !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+}
+.dashboard-off-label input[type="checkbox"] {
+  transform: scale(1.3) !important;
+  min-height: 20px !important;
+  min-width: 20px !important;
+}
+.dashboard-auto-off {
+  font-size: 0.8em !important;
+  color: #4EA8FF !important;
+  margin-left: 8px !important;
+  font-style: italic !important;
+}
+
+/* --- Save/Bulk Buttons --- */
+.dashboard-save-btn {
+  margin-top: 24px !important;
+  min-height: 52px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  padding: 1em 2em !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #4EA8FF 0%, #2563eb 100%) !important;
+  box-shadow: 0 4px 16px rgba(78,168,255,0.3) !important;
+  border: none !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  width: 100% !important;
+}
+.dashboard-bulk-btn {
+  display: block !important;
+  margin-top: 16px !important;
+  background: #23272A !important;
+  color: #4EA8FF !important;
+  font-weight: 600 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 1em 1.5em !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  min-height: 48px !important;
+  font-size: 1rem !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+  transition: all 0.2s ease !important;
+  width: 100% !important;
+}
+.dashboard-bulk-btn:focus {
+  outline: 2px solid #4EA8FF !important;
+}
+
+/* --- Responsive Breakpoints --- */
+@media (max-width: 1024px) {
+  .dashboard-topbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1.5em !important;
+  }
+  .dashboard-goal-box {
+    margin-right: 0 !important;
+    margin-top: 1em !important;
+  }
+  .dashboard-content.with-divider {
+    gap: 2em !important;
+  }
+  .dashboard-content.with-divider::before {
+    left: 0 !important;
+    top: 50% !important;
+    width: 100% !important;
+    height: 2px !important;
+    background: linear-gradient(to right, #4EA8FF22 0%, #23272A44 100%) !important;
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-topbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1em !important;
+  }
+  .dashboard-heading-wrap {
+    margin-bottom: 0.5em !important;
+  }
+  .dashboard-content.with-divider {
+    flex-direction: column !important;
+    gap: 1.5em !important;
+  }
+  .dashboard-content.with-divider::before {
+    display: none !important;
+  }
+  .dashboard-table-section, .dashboard-form {
+    padding: 1.2em 0.8em !important;
+    border-radius: 16px !important;
+  }
+  .dashboard-date-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.7em !important;
+  }
+}
+@media (max-width: 480px) {
+  .dashboard-topbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.7em !important;
+    margin-bottom: 1.2em !important;
+  }
+  .dashboard-monthyear {
+    font-size: 1.3rem !important;
+    letter-spacing: 1px !important;
+  }
+  .dashboard-goal-box {
+    font-size: 1rem !important;
+    padding: 0.8em 0.5em !important;
+    border-radius: 12px !important;
+  }
+  .dashboard-progress-circle {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .dashboard-table-section, .dashboard-form {
+    padding: 0.8em 0.4em !important;
+    border-radius: 12px !important;
+  }
+  .dashboard-content.with-divider {
+    gap: 0.7em !important;
+  }
+}
+@media (max-width: 360px) {
+  .dashboard-monthyear {
+    font-size: 1.05rem !important;
+  }
+  .dashboard-goal-box {
+    font-size: 0.9rem !important;
+    padding: 0.5em 0.2em !important;
+    border-radius: 8px !important;
+  }
+  .dashboard-progress-circle {
+    width: 48px !important;
+    height: 48px !important;
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from './firebase';
-import { collection, query, where, getDocs, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FiTrash2 } from 'react-icons/fi';
@@ -257,7 +257,7 @@ export default function PastMonths() {
       </div>
 
       {/* Pay Breakdown Section */}
-      {payBlocks.length > 0 && (
+      {filteredEntries.length > 0 && (
         <div style={{
           background: 'rgba(78,168,255,0.12)',
           color: '#4EA8FF',
@@ -272,12 +272,23 @@ export default function PastMonths() {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <div style={{ fontSize: '1.3rem', marginBottom: 8 }}>
-                Estimated Pay: ${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-              </div>
+              {payBlocks.length > 0 ? (
+                <div style={{ fontSize: '1.3rem', marginBottom: 8 }}>
+                  Estimated Pay: ${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                </div>
+              ) : (
+                <div style={{ fontSize: '1.3rem', marginBottom: 8 }}>
+                  Total Hours: {totals.total.toFixed(1)}
+                </div>
+              )}
               {schoolPayStructure && (
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
                   School Pay Structure Active{schoolName ? `: ${schoolName}` : ''} ✔️
+                </div>
+              )}
+              {payBlocks.length === 0 && (
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+                  Set up pay structure in Settings to see estimated pay
                 </div>
               )}
             </div>
@@ -293,7 +304,7 @@ export default function PastMonths() {
             )}
           </div>
           <div style={{ marginTop: 12, fontSize: '0.9rem', opacity: 0.8 }}>
-            Total Hours: {totals.total.toFixed(1)} | Flight: {totals.flight.toFixed(1)} | Pre/Post: {totals.prepost.toFixed(1)} | Ground: {totals.ground.toFixed(1)} | Cancellations: {totals.cancellations}
+            Flight: {totals.flight.toFixed(1)} | Pre/Post: {totals.prepost.toFixed(1)} | Ground: {totals.ground.toFixed(1)} | Cancellations: {totals.cancellations}
           </div>
         </div>
       )}

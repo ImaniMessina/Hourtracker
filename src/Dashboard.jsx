@@ -339,11 +339,11 @@ export default function Dashboard() {
         style={{ position: 'relative', paddingTop: '2.5em' }}
       >
         {/* Top bar with month, total hours, and logout icon */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2.5em', gap: 24 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 600, letterSpacing: '2px', color: '#4EA8FF', textShadow: '0 0 16px #4EA8FF55', textAlign: 'left' }}>{monthYear}</div>
-            <div style={{ marginTop: '0.5em', display: 'flex', alignItems: 'center', gap: 24 }}>
-              <div style={{ width: 90, height: 90, boxShadow: '0 0 24px #4EA8FF44', borderRadius: '50%', background: 'rgba(24,26,27,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="dashboard-topbar">
+          <div className="dashboard-heading-wrap">
+            <div className="dashboard-monthyear">{monthYear}</div>
+            <div className="dashboard-progress-row">
+              <div className="dashboard-progress-circle">
                 <CircularProgressbar
                   value={goal ? progress : 0}
                   maxValue={100}
@@ -363,11 +363,10 @@ export default function Dashboard() {
                   })}
                 />
               </div>
-              <div style={{ fontSize: '1rem', letterSpacing: '1px', color: '#fff', opacity: 0.7, marginLeft: 8 }}>TOTAL HOURS</div>
+              <div className="dashboard-total-label">TOTAL HOURS</div>
             </div>
           </div>
-          {/* Hours to goal message */}
-          <div style={{ minWidth: 220, textAlign: 'center', color: '#fff', fontWeight: 700, fontSize: '1.25rem', background: 'rgba(24,26,27,0.7)', borderRadius: 18, padding: '1.2em 1em', boxShadow: '0 2px 12px #4EA8FF22', marginRight: 16 }}>
+          <div className="dashboard-goal-box">
             {goalLoading ? (
               <span>Loading goal…</span>
             ) : goal === null ? (
@@ -393,27 +392,9 @@ export default function Dashboard() {
               </div>
             )}
           </div>
-          {/* Logout icon button */}
           <motion.button
             onClick={handleLogout}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-              margin: 0,
-              position: 'absolute',
-              top: 24,
-              right: 24,
-              zIndex: 2,
-              width: 36,
-              height: 36,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '50%',
-              transition: 'background 0.2s',
-            }}
+            className="dashboard-logout-btn"
             whileHover={{ scale: 1.15, backgroundColor: '#23272A' }}
             whileTap={{ scale: 0.95 }}
             title="Logout"
@@ -422,50 +403,26 @@ export default function Dashboard() {
           </motion.button>
         </div>
         {/* Main content: horizontal layout for form and table */}
-        <div className="dashboard-content" style={{ alignItems: 'flex-start', gap: 48, position: 'relative' }}>
+        <div className="dashboard-content with-divider">
           {/* Entry Form */}
-          <form className="dashboard-form" onSubmit={handleSubmit} style={{ minWidth: 320, maxWidth: 400, flex: 1, background: 'rgba(24,26,27,0.7)', borderRadius: 16, padding: '2em 1.5em', boxShadow: '0 2px 12px rgba(0,0,0,0.10)' }}>
-            <h3><FiCalendar style={{ marginRight: 8, verticalAlign: 'middle' }} /> Date</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <form className="dashboard-form" onSubmit={handleSubmit}>
+            <h3><FiCalendar className="icon-align" /> Date</h3>
+            <div className="dashboard-date-row">
               <input 
                 type="date" 
                 value={date} 
                 onChange={e => handleDateChange(e.target.value)} 
                 required 
-                style={{ 
-                  minHeight: '44px',
-                  fontSize: '16px',
-                  padding: '0.8em 1em',
-                  borderRadius: 8,
-                  border: '1px solid #23272A',
-                  background: 'rgba(35, 39, 42, 0.85)',
-                  color: '#fff',
-                  flex: 1,
-                  minWidth: '200px'
-                }}
               />
               <button 
                 type="button" 
-                style={{ 
-                  margin: 0, 
-                  padding: '0.8em 1.2em', 
-                  fontSize: '0.95em', 
-                  borderRadius: 8, 
-                  background: '#23272A', 
-                  color: '#4EA8FF', 
-                  border: 'none', 
-                  fontWeight: 600, 
-                  letterSpacing: 1, 
-                  cursor: 'pointer',
-                  minHeight: '44px',
-                  whiteSpace: 'nowrap'
-                }} 
+                className="dashboard-today-btn"
                 onClick={() => handleDateChange(getToday())}
               >
                 Today
               </button>
             </div>
-            <h3><FaPlane style={{ marginRight: 8, verticalAlign: 'middle' }} /> Flight Hours</h3>
+            <h3><FaPlane className="icon-align" /> Flight Hours</h3>
             <input 
               type="number" 
               step="0.1" 
@@ -473,19 +430,8 @@ export default function Dashboard() {
               onChange={e => setFlight(e.target.value)} 
               disabled={off} 
               min="0" 
-              style={{ 
-                minHeight: '44px',
-                fontSize: '16px',
-                padding: '0.8em 1em',
-                borderRadius: 8,
-                border: '1px solid #23272A',
-                background: 'rgba(35, 39, 42, 0.85)',
-                color: '#fff',
-                width: '100%',
-                boxSizing: 'border-box'
-              }}
             />
-            <h3><FaPencilAlt style={{ marginRight: 8, verticalAlign: 'middle' }} /> Pre/Post Hours</h3>
+            <h3><FaPencilAlt className="icon-align" /> Pre/Post Hours</h3>
             <input 
               type="number" 
               step="0.1" 
@@ -493,19 +439,8 @@ export default function Dashboard() {
               onChange={e => setPrepost(e.target.value)} 
               disabled={off} 
               min="0" 
-              style={{ 
-                minHeight: '44px',
-                fontSize: '16px',
-                padding: '0.8em 1em',
-                borderRadius: 8,
-                border: '1px solid #23272A',
-                background: 'rgba(35, 39, 42, 0.85)',
-                color: '#fff',
-                width: '100%',
-                boxSizing: 'border-box'
-              }}
             />
-            <h3><FaBook style={{ marginRight: 8, verticalAlign: 'middle' }} /> Ground Hours</h3>
+            <h3><FaBook className="icon-align" /> Ground Hours</h3>
             <input 
               type="number" 
               step="0.1" 
@@ -513,17 +448,6 @@ export default function Dashboard() {
               onChange={e => setGround(e.target.value)} 
               disabled={off} 
               min="0" 
-              style={{ 
-                minHeight: '44px',
-                fontSize: '16px',
-                padding: '0.8em 1em',
-                borderRadius: 8,
-                border: '1px solid #23272A',
-                background: 'rgba(35, 39, 42, 0.85)',
-                color: '#fff',
-                width: '100%',
-                boxSizing: 'border-box'
-              }}
             />
             <h3>Cancellation Hours</h3>
             <input 
@@ -533,136 +457,58 @@ export default function Dashboard() {
               value={cancellations} 
               onChange={e => setCancellations(e.target.value)} 
               disabled={off} 
-              style={{ 
-                minHeight: '44px',
-                fontSize: '16px',
-                padding: '0.8em 1em',
-                borderRadius: 8,
-                border: '1px solid #23272A',
-                background: 'rgba(35, 39, 42, 0.85)',
-                color: '#fff',
-                width: '100%',
-                boxSizing: 'border-box'
-              }}
             />
             <h3>Notes</h3>
             <textarea 
               value={notes} 
               onChange={e => setNotes(e.target.value)} 
               placeholder="Notes (optional)" 
-              style={{ 
-                minHeight: 60, 
-                borderRadius: 8, 
-                padding: '0.8em 1em', 
-                marginBottom: 8, 
-                resize: 'vertical',
-                fontSize: '16px',
-                border: '1px solid #23272A',
-                background: 'rgba(35, 39, 42, 0.85)',
-                color: '#fff',
-                width: '100%',
-                boxSizing: 'border-box',
-                fontFamily: 'inherit'
-              }} 
             />
-            <label style={{ 
-              marginTop: 16, 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 12,
-              padding: '0.8em 0',
-              cursor: 'pointer'
-            }}>
+            <label className="dashboard-off-label">
               <input 
                 type="checkbox" 
                 checked={off} 
                 onChange={e => setOff(e.target.checked)} 
-                style={{ 
-                  transform: 'scale(1.3)',
-                  minHeight: '20px',
-                  minWidth: '20px'
-                }}
               /> 
-              <span style={{ fontSize: '1rem', fontWeight: 500 }}>OFF Day</span>
+              <span>OFF Day</span>
               {checkAutoOffDay(date) && (
-                <span style={{ fontSize: '0.8em', color: '#4EA8FF', marginLeft: 8, fontStyle: 'italic' }}>
-                  (Auto-filled based on weekly off days)
-                </span>
+                <span className="dashboard-auto-off">(Auto-filled based on weekly off days)</span>
               )}
             </label>
             <motion.button
               type="submit"
               disabled={loading}
               whileTap={{ scale: 0.97 }}
-              style={{ 
-                marginTop: 24,
-                minHeight: '52px',
-                fontSize: '1.1rem',
-                fontWeight: 600,
-                padding: '1em 2em',
-                borderRadius: 12,
-                background: 'linear-gradient(135deg, #4EA8FF 0%, #2563eb 100%)',
-                boxShadow: '0 4px 16px rgba(78,168,255,0.3)',
-                border: 'none',
-                color: '#fff',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                width: '100%'
-              }}
+              className="dashboard-save-btn"
             >
               {loading ? 'Saving...' : 'Save'}
             </motion.button>
             <Link 
               to="/bulk-entry" 
-              style={{ 
-                display: 'block', 
-                marginTop: 16, 
-                background: '#23272A', 
-                color: '#4EA8FF', 
-                fontWeight: 600, 
-                border: 'none', 
-                borderRadius: 12, 
-                padding: '1em 1.5em', 
-                textAlign: 'center', 
-                textDecoration: 'none',
-                minHeight: '48px',
-                fontSize: '1rem',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                transition: 'all 0.2s ease'
-              }}
+              className="dashboard-bulk-btn"
             >
               Bulk Add
             </Link>
           </form>
           {/* Table Section */}
-          <div className="dashboard-table" style={{ 
-            flex: 2, 
-            marginTop: 0, 
-            background: 'rgba(24, 26, 27, 0.85)', 
-            borderRadius: 18, 
-            padding: '2em 1.5em', 
-            boxShadow: '0 2px 12px rgba(0,0,0,0.10)', 
-            overflowX: 'auto', 
-            position: 'relative',
-            WebkitOverflowScrolling: 'touch'
-          }}>
-            <h3 style={{ marginBottom: 24 }}><FiCalendar style={{ marginRight: 8, verticalAlign: 'middle' }} /> Entries This Month</h3>
+          <div className="dashboard-table-section">
+            <h3><FiCalendar className="icon-align" /> Entries This Month</h3>
             <table>
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th><FaPlane style={{ verticalAlign: 'middle' }} /> Flight</th>
-                  <th><FaPencilAlt style={{ verticalAlign: 'middle' }} /> Pre/Post</th>
-                  <th><FaBook style={{ verticalAlign: 'middle' }} /> Ground</th>
+                  <th><FaPlane className="icon-align" /> Flight</th>
+                  <th><FaPencilAlt className="icon-align" /> Pre/Post</th>
+                  <th><FaBook className="icon-align" /> Ground</th>
                   <th>OFF</th>
                   <th>Notes</th>
                 </tr>
               </thead>
               <tbody>
                 {fetching ? (
-                  <tr><td colSpan="5" style={{ textAlign: 'center', opacity: 0.7 }}>Loading...</td></tr>
+                  <tr><td colSpan="6" style={{ textAlign: 'center', opacity: 0.7 }}>Loading...</td></tr>
                 ) : entries.length === 0 ? (
-                  <tr><td colSpan="5" style={{ textAlign: 'center', opacity: 0.7 }}>No entries yet.</td></tr>
+                  <tr><td colSpan="6" style={{ textAlign: 'center', opacity: 0.7 }}>No entries yet.</td></tr>
                 ) : (
                   entries.map(e => (
                     <motion.tr
@@ -690,6 +536,7 @@ export default function Dashboard() {
                   <td>{totals.flight.toFixed(1)}</td>
                   <td>{totals.prepost.toFixed(1)}</td>
                   <td>{totals.ground.toFixed(1)}</td>
+                  <td></td>
                   <td></td>
                 </tr>
               </tfoot>

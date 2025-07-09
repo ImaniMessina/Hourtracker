@@ -15,6 +15,7 @@ import PastMonths from './PastMonths';
 import Settings from './Settings';
 import PayStructure from './PayStructure';
 import BulkEntry from './BulkEntry';
+import WeeklyOffDays from './WeeklyOffDays';
 import { auth } from './firebase';
 
 function NavTabs() {
@@ -58,6 +59,7 @@ function AppRoutes() {
         <Route path="/bulk-entry" element={<BulkEntry />} />
         <Route path="/past-months" element={<PastMonths />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/settings/weekly-off-days" element={<WeeklyOffDays />} />
         <Route path="/pay-structure" element={<PayStructure />} />
       </Routes>
     </>
