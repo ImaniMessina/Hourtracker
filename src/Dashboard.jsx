@@ -65,6 +65,9 @@ export default function Dashboard() {
   const [cancellationThreshold, setCancellationThreshold] = useState('');
   const [cancellationFlatAmount, setCancellationFlatAmount] = useState('');
   const [cancellationPerHour, setCancellationPerHour] = useState('');
+  const [notes, setNotes] = useState('');
+  const [weeklyOffDays, setWeeklyOffDays] = useState([]);
+  const [offDaysEffectiveDate, setOffDaysEffectiveDate] = useState('');
 
   // --- Data for charts ---
   // Monthly totals for the current year
@@ -194,9 +197,11 @@ export default function Dashboard() {
         setSchoolPayStructure(userDoc.data().schoolPayStructure || false);
         setSchoolName(userDoc.data().schoolName || '');
         setCancellationPayType(userDoc.data().cancellationPayType || 'none');
-        setCancellationThreshold(userDoc.data().cancellationThreshold || '');
-        setCancellationFlatAmount(userDoc.data().cancellationFlatAmount || '');
-        setCancellationPerHour(userDoc.data().cancellationPerHour || '');
+                  setCancellationThreshold(userDoc.data().cancellationThreshold || '');
+          setCancellationFlatAmount(userDoc.data().cancellationFlatAmount || '');
+          setCancellationPerHour(userDoc.data().cancellationPerHour || '');
+          setWeeklyOffDays(userDoc.data().weeklyOffDays || []);
+          setOffDaysEffectiveDate(userDoc.data().offDaysEffectiveDate || '');
       } else {
         setGoal(null);
         setPayBlocks([]);
@@ -259,6 +264,33 @@ export default function Dashboard() {
     navigate('/login');
   };
 
+  // Check if current date should be auto-filled as off day
+  const checkAutoOffDay = (selectedDate) => {
+    if (!weeklyOffDays.length || !offDaysEffectiveDate) return false;
+    
+    const effectiveDate = new Date(offDaysEffectiveDate);
+    const checkDate = new Date(selectedDate);
+    
+    // Only apply if the selected date is on or after the effective date
+    if (checkDate < effectiveDate) return false;
+    
+    const dayOfWeek = checkDate.toLocaleDateString('en-US', { weekday: 'long' });
+    return weeklyOffDays.includes(dayOfWeek);
+  };
+
+  // Handle date change with auto-off day check
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    const shouldBeOff = checkAutoOffDay(newDate);
+    if (shouldBeOff && !off) {
+      setOff(true);
+      setFlight('');
+      setPrepost('');
+      setGround('');
+      setCancellations('');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -273,6 +305,7 @@ export default function Dashboard() {
         ground: off ? 0 : parseFloat(ground) || 0,
         cancellations: parseInt(cancellations) || 0,
         off,
+        notes: notes || '',
         created: Timestamp.now(),
       });
       setSuccess('Saved!');
@@ -281,6 +314,7 @@ export default function Dashboard() {
       setGround('');
       setCancellations('');
       setOff(false);
+      setNotes('');
     } catch (err) {
       setError('Error saving entry.');
     }
@@ -393,8 +427,8 @@ export default function Dashboard() {
           <form className="dashboard-form" onSubmit={handleSubmit} style={{ minWidth: 320, maxWidth: 400, flex: 1, background: 'rgba(24,26,27,0.7)', borderRadius: 16, padding: '2em 1.5em', boxShadow: '0 2px 12px rgba(0,0,0,0.10)' }}>
             <h3><FiCalendar style={{ marginRight: 8, verticalAlign: 'middle' }} /> Date</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <input type="date" value={date} onChange={e => setDate(e.target.value)} required />
-              <button type="button" style={{ margin: 0, padding: '0.3em 1em', fontSize: '0.95em', borderRadius: 6, background: '#23272A', color: '#4EA8FF', border: 'none', fontWeight: 600, letterSpacing: 1, cursor: 'pointer' }} onClick={() => setDate(getToday())}>Today</button>
+              <input type="date" value={date} onChange={e => handleDateChange(e.target.value)} required />
+              <button type="button" style={{ margin: 0, padding: '0.3em 1em', fontSize: '0.95em', borderRadius: 6, background: '#23272A', color: '#4EA8FF', border: 'none', fontWeight: 600, letterSpacing: 1, cursor: 'pointer' }} onClick={() => handleDateChange(getToday())}>Today</button>
             </div>
             <h3><FaPlane style={{ marginRight: 8, verticalAlign: 'middle' }} /> Flight Hours</h3>
             <input type="number" step="0.1" value={flight} onChange={e => setFlight(e.target.value)} disabled={off} min="0" />
@@ -404,8 +438,15 @@ export default function Dashboard() {
             <input type="number" step="0.1" value={ground} onChange={e => setGround(e.target.value)} disabled={off} min="0" />
             <h3>Cancellation Hours</h3>
             <input type="number" step="1" min="0" value={cancellations} onChange={e => setCancellations(e.target.value)} disabled={off} />
+            <h3>Notes</h3>
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Notes (optional)" style={{ minHeight: 48, borderRadius: 8, padding: 8, marginBottom: 8, resize: 'vertical' }} />
             <label style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
               <input type="checkbox" checked={off} onChange={e => setOff(e.target.checked)} /> OFF Day
+              {checkAutoOffDay(date) && (
+                <span style={{ fontSize: '0.8em', color: '#4EA8FF', marginLeft: 8, fontStyle: 'italic' }}>
+                  (Auto-filled based on weekly off days)
+                </span>
+              )}
             </label>
             <motion.button
               type="submit"
@@ -430,6 +471,7 @@ export default function Dashboard() {
                   <th><FaPencilAlt style={{ verticalAlign: 'middle' }} /> Pre/Post</th>
                   <th><FaBook style={{ verticalAlign: 'middle' }} /> Ground</th>
                   <th>OFF</th>
+                  <th>Notes</th>
                 </tr>
               </thead>
               <tbody>
@@ -451,6 +493,9 @@ export default function Dashboard() {
                       <td>{e.prepost}</td>
                       <td>{e.ground}</td>
                       <td>{e.off ? '✔️' : ''}</td>
+                      <td style={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={e.notes || ''}>
+                        {e.notes || ''}
+                      </td>
                     </motion.tr>
                   ))
                 )}
