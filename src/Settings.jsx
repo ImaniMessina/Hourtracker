@@ -190,7 +190,7 @@ export default function Settings() {
       <h2>Settings</h2>
       <div style={{ marginBottom: 32 }}>
         <h3>Profile Picture</h3>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 12 }}>
           <img src={photoURL || 'https://ui-avatars.com/api/?name=User'} alt="Profile" style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: '2px solid #4EA8FF' }} />
           <input type="file" accept="image/*" onChange={handlePhotoUpload} disabled={uploading} />
         </div>

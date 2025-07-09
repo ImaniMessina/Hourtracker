@@ -5,7 +5,7 @@ import { collection, addDoc, Timestamp, query, where, getDocs, orderBy, doc, get
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { motion } from 'framer-motion';
-import { FiPlus, FiCalendar } from 'react-icons/fi';
+import { FiPlus, FiCalendar, FiArrowRight } from 'react-icons/fi';
 import { FaPlane, FaPencilAlt, FaBook } from 'react-icons/fa';
 import { Bar, Pie } from 'react-chartjs-2';
 import {
@@ -366,15 +366,15 @@ export default function Dashboard() {
               <div className="dashboard-total-label">TOTAL HOURS</div>
             </div>
           </div>
-          <div className="dashboard-goal-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+          <div className="dashboard-goal-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'nowrap', overflow: 'hidden' }}>
             {goalLoading ? (
               <span>Loading goal…</span>
             ) : goal === null ? (
               <span style={{ color: '#4EA8FF', fontWeight: 600 }}>Set your monthly goal in Settings</span>
             ) : hoursLeft > 0 ? (
               <>
-                <span>{hoursLeft.toFixed(1)} hours left to reach your goal of {goal}!</span>
-                {/* If you want an arrow icon, place it here, spaced to the right */}
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{hoursLeft.toFixed(1)} hours left to reach your goal of {goal}!</span>
+                <FiArrowRight style={{ fontSize: 28, color: '#4EA8FF', flexShrink: 0 }} />
               </>
             ) : (
               <span style={{ color: '#4EA8FF' }}>Goal reached! 🎉</span>
