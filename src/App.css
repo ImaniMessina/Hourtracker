@@ -1314,15 +1314,11 @@ textarea::placeholder {
 .goalpay-payval {
   font-size: 1.45rem;
   font-weight: 800;
-  color: #fff;
+  color: #4ea8ff;
   margin-left: 0.25em;
-  background: linear-gradient(90deg, #4ea8ff 30%, #23272a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-  filter: drop-shadow(0 0 8px #4ea8ff88);
-  transition: color 0.3s, filter 0.3s;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 2px #23272a55;
+  transition: color 0.3s;
 }
 @media (max-width: 700px) {
   .dashboard-goalpay-card.elevated {
