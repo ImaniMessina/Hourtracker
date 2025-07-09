@@ -1234,7 +1234,7 @@ textarea::placeholder {
 
 /* --- Premium Goal/Pay Card Elevation --- */
 .dashboard-goalpay-card.elevated {
-  background: rgba(24, 26, 40, 0.92);
+  background: rgba(10, 12, 16, 0.96);
   box-shadow: 0 4px 32px #23272a66, 0 1.5px 8px #4ea8ff55, 0 0 0 2px #4ea8ff33;
   border-radius: 2em;
   padding: 2.5em 3em 2em 3em;
@@ -1250,6 +1250,19 @@ textarea::placeholder {
   border-image: linear-gradient(120deg, #4ea8ff 0%, #23272a 100%) 1;
   overflow: visible;
   transition: box-shadow 0.3s, border-color 0.3s;
+}
+.dashboard-goalpay-card.elevated::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  height: 180%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.12) 60%, rgba(0,0,0,0) 100%);
+  border-radius: 2.5em;
 }
 .dashboard-goalpay-card.elevated:hover,
 .dashboard-goalpay-card.elevated:focus-within {
