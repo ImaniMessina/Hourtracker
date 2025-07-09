@@ -488,12 +488,14 @@ export default function Dashboard() {
             >
               {loading ? 'Saving...' : 'Save'}
             </motion.button>
-            <Link 
-              to="/bulk-entry" 
-              className="dashboard-bulk-btn"
+            <button
+              type="button"
+              className="dashboard-save-btn"
+              style={{ width: '100%', marginTop: 24 }}
+              onClick={() => navigate('/bulk-entry')}
             >
               Bulk Add
-            </Link>
+            </button>
           </form>
           {/* Table Section */}
           <div className="dashboard-table-section">
