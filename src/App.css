@@ -126,65 +126,328 @@
   min-width: 60px;
   max-width: 80px;
 }
-@media (max-width: 700px) {
+
+/* ===== MOBILE OPTIMIZATION ===== */
+
+/* Large tablets and small desktops */
+@media (max-width: 1024px) {
+  #root {
+    padding: 1rem;
+  }
+  
+  .card {
+    padding: 1.5em;
+    margin: 2em auto 0 auto;
+  }
+  
+  .dashboard-content {
+    gap: 2em;
+  }
+  
+  .nav-tabs {
+    gap: 1.5em;
+    padding: 1em 0;
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  #root {
+    padding: 0.5rem;
+  }
+  
+  .card {
+    padding: 1.2em;
+    margin: 1em auto 0 auto;
+    border-radius: 20px;
+  }
+  
+  .nav-tabs {
+    flex-direction: row;
+    gap: 1em;
+    padding: 0.8em 0;
+    border-radius: 0 0 20px 20px;
+  }
+  
+  .nav-tabs a {
+    font-size: 1rem;
+    padding: 0.4em 1em;
+    letter-spacing: 1px;
+  }
+  
+  .dashboard-content {
+    flex-direction: column;
+    gap: 1.5em;
+  }
+  
+  /* Touch-friendly inputs */
+  input, button, select, textarea {
+    min-height: 44px; /* iOS recommended touch target */
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  /* Larger touch targets for buttons */
+  button {
+    min-height: 48px;
+    padding: 0.8em 1.5em;
+  }
+  
+  /* Better table scrolling */
+  .dashboard-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  table {
+    min-width: 600px;
+    font-size: 0.9rem;
+  }
+  
+  th, td {
+    padding: 0.8em 0.6em;
+    white-space: nowrap;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  #root {
+    padding: 0.25rem;
+  }
+  
+  .card {
+    padding: 1em 0.8em;
+    margin: 0.5em auto 0 auto;
+    border-radius: 16px;
+  }
+  
+  /* Stack navigation vertically on very small screens */
+  .nav-tabs {
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 0.6em 0;
+    border-radius: 0 0 16px 16px;
+  }
+  
+  .nav-tabs a {
+    font-size: 0.95rem;
+    padding: 0.6em 1em;
+    width: 90%;
+    text-align: center;
+  }
+  
+  /* Full-width form elements */
+  .dashboard-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 1em !important;
+  }
+  
+  input, button, select, textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 1em !important;
+  }
+  
+  /* Larger touch targets */
+  input, select, textarea {
+    min-height: 48px;
+    font-size: 16px;
+    padding: 0.8em 1em;
+  }
+  
+  button {
+    min-height: 52px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 1em 1.5em;
+  }
+  
+  /* Better spacing */
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1em;
+  }
+  
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8em;
+  }
+  
+  /* Compact table */
+  .dashboard-table {
+    padding: 0.8em !important;
+  }
+  
+  table {
+    min-width: 500px;
+    font-size: 0.85rem;
+  }
+  
+  th, td {
+    padding: 0.6em 0.4em;
+  }
+  
+  /* Floating action button adjustments */
+  .fab {
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+  }
+  
+  /* Better bulk entry layout */
   .bulk-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 6px;
+    gap: 0.8em;
   }
+  
   .bulk-row input,
   .bulk-row label,
   .bulk-row button {
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    margin-bottom: 6px;
+    margin-bottom: 0.5em;
+  }
+  
+  /* Settings improvements */
+  .settings-section {
+    padding: 1em !important;
+  }
+  
+  /* Pay breakdown mobile layout */
+  .pay-breakdown {
+    padding: 1em !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .pay-breakdown > div {
+    flex-direction: column !important;
+    gap: 1em !important;
   }
 }
 
-@media (max-width: 600px) {
-  .dashboard-form, .card, .dashboard-table, .settings-section {
-    width: 98vw !important;
-    max-width: 400px !important;
-    min-width: unset !important;
-    padding: 2em 1em 2em 1em !important;
-    border-radius: 14px !important;
-    margin: 1.2em auto !important;
-    box-sizing: border-box !important;
-    box-shadow: 0 2px 12px #23272A33 !important;
-    display: block !important;
+/* Extra small phones */
+@media (max-width: 360px) {
+  .card {
+    padding: 0.8em 0.6em;
+    margin: 0.3em auto 0 auto;
   }
-  input, button, select {
-    width: 100% !important;
-    font-size: 1.1em !important;
-    box-sizing: border-box !important;
-    margin-bottom: 1.1em !important;
-    margin-top: 0.2em !important;
-    max-width: 100% !important;
+  
+  .nav-tabs a {
+    font-size: 0.9rem;
+    padding: 0.5em 0.8em;
   }
-  h3, h2 {
-    font-size: 1.2em !important;
-    margin-top: 1.2em !important;
-    margin-bottom: 0.7em !important;
+  
+  h2 {
+    font-size: 1.6rem;
   }
-  .dashboard-content {
-    flex-direction: column !important;
-    gap: 20px !important;
-    align-items: stretch !important;
+  
+  h3 {
+    font-size: 1rem;
   }
+  
+  input, button, select, textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  
+  button {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+  
+  table {
+    min-width: 450px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .card {
+    margin: 0.5em auto 0 auto;
+    padding: 1em;
+  }
+  
   .nav-tabs {
-    flex-direction: column !important;
-    gap: 1.2em !important;
-    padding: 0.9em 0.2em !important;
-    border-radius: 0 0 16px 16px !important;
-    font-size: 1em !important;
+    padding: 0.4em 0;
+    margin-bottom: 1em;
   }
-  .dashboard-table table, .dashboard-table th, .dashboard-table td {
-    font-size: 1em !important;
-    padding: 0.5em !important;
+  
+  .dashboard-content {
+    gap: 1em;
   }
-  label {
-    margin-bottom: 0.7em !important;
-    display: block !important;
+  
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8em;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    margin-bottom: 0.6em;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  input, button, select, textarea {
+    border-width: 0.5px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  /* Already optimized for dark mode */
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus improvements for accessibility */
+@media (max-width: 768px) {
+  input:focus, button:focus, select:focus, textarea:focus {
+    outline: 2px solid #4EA8FF;
+    outline-offset: 2px;
+  }
+  
+  /* Better focus indicators for touch devices */
+  button:focus-visible {
+    outline: 3px solid #4EA8FF;
+    outline-offset: 2px;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  button, input[type="checkbox"], input[type="radio"] {
+    min-height: 44px;
+  }
+  
+  /* Better spacing for touch */
+  .nav-tabs a {
+    padding: 0.8em 1.2em;
+  }
+  
+  /* Prevent text selection on buttons */
+  button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 }

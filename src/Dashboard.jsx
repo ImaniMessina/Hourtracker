@@ -426,22 +426,164 @@ export default function Dashboard() {
           {/* Entry Form */}
           <form className="dashboard-form" onSubmit={handleSubmit} style={{ minWidth: 320, maxWidth: 400, flex: 1, background: 'rgba(24,26,27,0.7)', borderRadius: 16, padding: '2em 1.5em', boxShadow: '0 2px 12px rgba(0,0,0,0.10)' }}>
             <h3><FiCalendar style={{ marginRight: 8, verticalAlign: 'middle' }} /> Date</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <input type="date" value={date} onChange={e => handleDateChange(e.target.value)} required />
-              <button type="button" style={{ margin: 0, padding: '0.3em 1em', fontSize: '0.95em', borderRadius: 6, background: '#23272A', color: '#4EA8FF', border: 'none', fontWeight: 600, letterSpacing: 1, cursor: 'pointer' }} onClick={() => handleDateChange(getToday())}>Today</button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+              <input 
+                type="date" 
+                value={date} 
+                onChange={e => handleDateChange(e.target.value)} 
+                required 
+                style={{ 
+                  minHeight: '44px',
+                  fontSize: '16px',
+                  padding: '0.8em 1em',
+                  borderRadius: 8,
+                  border: '1px solid #23272A',
+                  background: 'rgba(35, 39, 42, 0.85)',
+                  color: '#fff',
+                  flex: 1,
+                  minWidth: '200px'
+                }}
+              />
+              <button 
+                type="button" 
+                style={{ 
+                  margin: 0, 
+                  padding: '0.8em 1.2em', 
+                  fontSize: '0.95em', 
+                  borderRadius: 8, 
+                  background: '#23272A', 
+                  color: '#4EA8FF', 
+                  border: 'none', 
+                  fontWeight: 600, 
+                  letterSpacing: 1, 
+                  cursor: 'pointer',
+                  minHeight: '44px',
+                  whiteSpace: 'nowrap'
+                }} 
+                onClick={() => handleDateChange(getToday())}
+              >
+                Today
+              </button>
             </div>
             <h3><FaPlane style={{ marginRight: 8, verticalAlign: 'middle' }} /> Flight Hours</h3>
-            <input type="number" step="0.1" value={flight} onChange={e => setFlight(e.target.value)} disabled={off} min="0" />
+            <input 
+              type="number" 
+              step="0.1" 
+              value={flight} 
+              onChange={e => setFlight(e.target.value)} 
+              disabled={off} 
+              min="0" 
+              style={{ 
+                minHeight: '44px',
+                fontSize: '16px',
+                padding: '0.8em 1em',
+                borderRadius: 8,
+                border: '1px solid #23272A',
+                background: 'rgba(35, 39, 42, 0.85)',
+                color: '#fff',
+                width: '100%',
+                boxSizing: 'border-box'
+              }}
+            />
             <h3><FaPencilAlt style={{ marginRight: 8, verticalAlign: 'middle' }} /> Pre/Post Hours</h3>
-            <input type="number" step="0.1" value={prepost} onChange={e => setPrepost(e.target.value)} disabled={off} min="0" />
+            <input 
+              type="number" 
+              step="0.1" 
+              value={prepost} 
+              onChange={e => setPrepost(e.target.value)} 
+              disabled={off} 
+              min="0" 
+              style={{ 
+                minHeight: '44px',
+                fontSize: '16px',
+                padding: '0.8em 1em',
+                borderRadius: 8,
+                border: '1px solid #23272A',
+                background: 'rgba(35, 39, 42, 0.85)',
+                color: '#fff',
+                width: '100%',
+                boxSizing: 'border-box'
+              }}
+            />
             <h3><FaBook style={{ marginRight: 8, verticalAlign: 'middle' }} /> Ground Hours</h3>
-            <input type="number" step="0.1" value={ground} onChange={e => setGround(e.target.value)} disabled={off} min="0" />
+            <input 
+              type="number" 
+              step="0.1" 
+              value={ground} 
+              onChange={e => setGround(e.target.value)} 
+              disabled={off} 
+              min="0" 
+              style={{ 
+                minHeight: '44px',
+                fontSize: '16px',
+                padding: '0.8em 1em',
+                borderRadius: 8,
+                border: '1px solid #23272A',
+                background: 'rgba(35, 39, 42, 0.85)',
+                color: '#fff',
+                width: '100%',
+                boxSizing: 'border-box'
+              }}
+            />
             <h3>Cancellation Hours</h3>
-            <input type="number" step="1" min="0" value={cancellations} onChange={e => setCancellations(e.target.value)} disabled={off} />
+            <input 
+              type="number" 
+              step="1" 
+              min="0" 
+              value={cancellations} 
+              onChange={e => setCancellations(e.target.value)} 
+              disabled={off} 
+              style={{ 
+                minHeight: '44px',
+                fontSize: '16px',
+                padding: '0.8em 1em',
+                borderRadius: 8,
+                border: '1px solid #23272A',
+                background: 'rgba(35, 39, 42, 0.85)',
+                color: '#fff',
+                width: '100%',
+                boxSizing: 'border-box'
+              }}
+            />
             <h3>Notes</h3>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Notes (optional)" style={{ minHeight: 48, borderRadius: 8, padding: 8, marginBottom: 8, resize: 'vertical' }} />
-            <label style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="checkbox" checked={off} onChange={e => setOff(e.target.checked)} /> OFF Day
+            <textarea 
+              value={notes} 
+              onChange={e => setNotes(e.target.value)} 
+              placeholder="Notes (optional)" 
+              style={{ 
+                minHeight: 60, 
+                borderRadius: 8, 
+                padding: '0.8em 1em', 
+                marginBottom: 8, 
+                resize: 'vertical',
+                fontSize: '16px',
+                border: '1px solid #23272A',
+                background: 'rgba(35, 39, 42, 0.85)',
+                color: '#fff',
+                width: '100%',
+                boxSizing: 'border-box',
+                fontFamily: 'inherit'
+              }} 
+            />
+            <label style={{ 
+              marginTop: 16, 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 12,
+              padding: '0.8em 0',
+              cursor: 'pointer'
+            }}>
+              <input 
+                type="checkbox" 
+                checked={off} 
+                onChange={e => setOff(e.target.checked)} 
+                style={{ 
+                  transform: 'scale(1.3)',
+                  minHeight: '20px',
+                  minWidth: '20px'
+                }}
+              /> 
+              <span style={{ fontSize: '1rem', fontWeight: 500 }}>OFF Day</span>
               {checkAutoOffDay(date) && (
                 <span style={{ fontSize: '0.8em', color: '#4EA8FF', marginLeft: 8, fontStyle: 'italic' }}>
                   (Auto-filled based on weekly off days)
@@ -452,16 +594,58 @@ export default function Dashboard() {
               type="submit"
               disabled={loading}
               whileTap={{ scale: 0.97 }}
-              style={{ marginTop: 24 }}
+              style={{ 
+                marginTop: 24,
+                minHeight: '52px',
+                fontSize: '1.1rem',
+                fontWeight: 600,
+                padding: '1em 2em',
+                borderRadius: 12,
+                background: 'linear-gradient(135deg, #4EA8FF 0%, #2563eb 100%)',
+                boxShadow: '0 4px 16px rgba(78,168,255,0.3)',
+                border: 'none',
+                color: '#fff',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                width: '100%'
+              }}
             >
               {loading ? 'Saving...' : 'Save'}
             </motion.button>
-            <Link to="/bulk-entry" style={{ display: 'block', marginTop: 16, background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', textAlign: 'center', textDecoration: 'none' }}>
+            <Link 
+              to="/bulk-entry" 
+              style={{ 
+                display: 'block', 
+                marginTop: 16, 
+                background: '#23272A', 
+                color: '#4EA8FF', 
+                fontWeight: 600, 
+                border: 'none', 
+                borderRadius: 12, 
+                padding: '1em 1.5em', 
+                textAlign: 'center', 
+                textDecoration: 'none',
+                minHeight: '48px',
+                fontSize: '1rem',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                transition: 'all 0.2s ease'
+              }}
+            >
               Bulk Add
             </Link>
           </form>
           {/* Table Section */}
-          <div className="dashboard-table" style={{ flex: 2, marginTop: 0, background: 'rgba(24, 26, 27, 0.85)', borderRadius: 18, padding: '2em 1.5em', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', overflowX: 'auto', position: 'relative' }}>
+          <div className="dashboard-table" style={{ 
+            flex: 2, 
+            marginTop: 0, 
+            background: 'rgba(24, 26, 27, 0.85)', 
+            borderRadius: 18, 
+            padding: '2em 1.5em', 
+            boxShadow: '0 2px 12px rgba(0,0,0,0.10)', 
+            overflowX: 'auto', 
+            position: 'relative',
+            WebkitOverflowScrolling: 'touch'
+          }}>
             <h3 style={{ marginBottom: 24 }}><FiCalendar style={{ marginRight: 8, verticalAlign: 'middle' }} /> Entries This Month</h3>
             <table>
               <thead>
@@ -514,11 +698,36 @@ export default function Dashboard() {
         </div>
       </motion.div>
       {/* Data Visualization Section */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 48, margin: '3em 0', justifyContent: 'center' }}>
-        <div style={{ background: 'rgba(24,26,27,0.85)', borderRadius: 24, padding: 32, minWidth: 350, maxWidth: 500, flex: 1, boxShadow: '0 2px 16px #23272A33' }}>
+      <div style={{ 
+        display: 'flex', 
+        flexWrap: 'wrap', 
+        gap: '2em', 
+        margin: '3em 0', 
+        justifyContent: 'center',
+        padding: '0 1em'
+      }}>
+        <div style={{ 
+          background: 'rgba(24,26,27,0.85)', 
+          borderRadius: 24, 
+          padding: '2em', 
+          minWidth: '300px', 
+          maxWidth: '500px', 
+          flex: 1, 
+          boxShadow: '0 2px 16px #23272A33',
+          width: '100%'
+        }}>
           <Bar data={barData} options={barOptions} />
         </div>
-        <div style={{ background: 'rgba(24,26,27,0.85)', borderRadius: 24, padding: 32, minWidth: 350, maxWidth: 500, flex: 1, boxShadow: '0 2px 16px #23272A33' }}>
+        <div style={{ 
+          background: 'rgba(24,26,27,0.85)', 
+          borderRadius: 24, 
+          padding: '2em', 
+          minWidth: '300px', 
+          maxWidth: '500px', 
+          flex: 1, 
+          boxShadow: '0 2px 16px #23272A33',
+          width: '100%'
+        }}>
           <Pie data={pieData} options={pieOptions} />
         </div>
       </div>

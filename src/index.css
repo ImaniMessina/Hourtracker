@@ -172,6 +172,8 @@ button:focus-visible {
   }
 }
 
+/* ===== ENHANCED MOBILE RESPONSIVENESS ===== */
+
 @media (max-width: 900px) {
   .dashboard-content {
     flex-direction: column;
@@ -180,52 +182,209 @@ button:focus-visible {
   .dashboard-content::before {
     display: none;
   }
+  
+  /* Better table handling */
+  .dashboard-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 @media (max-width: 700px) {
+  #root {
+    padding: 0.5rem;
+  }
+  
   .nav-tabs {
-    flex-direction: column;
-    gap: 0.5em;
-    padding: 0.7em 0 0.7em 0;
+    flex-direction: row;
+    gap: 0.8em;
+    padding: 0.8em 0;
     font-size: 0.95rem;
-    border-radius: 0 0 16px 16px;
+    border-radius: 0 0 20px 20px;
   }
   .nav-tabs a {
-    padding: 0.5em 0.8em;
-    font-size: 1rem;
+    padding: 0.6em 1em;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
   }
   .card {
-    max-width: 99vw;
-    padding: 1em 0.3em;
-    margin: 2em auto 0 auto;
+    max-width: 98vw;
+    padding: 1.2em 1em;
+    margin: 1.5em auto 0 auto;
+    border-radius: 20px;
   }
   h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    margin-bottom: 1em;
   }
   h3 {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.8em;
   }
   button, .dashboard-form button {
     font-size: 1rem;
-    padding: 0.7em 1.2em;
+    padding: 0.8em 1.5em;
+    min-height: 48px;
+  }
+  
+  /* Touch-friendly inputs */
+  input, select, textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 44px;
+    padding: 0.8em 1em;
+  }
+  
+  /* Better table scrolling */
+  table {
+    min-width: 600px;
+    font-size: 0.9rem;
+  }
+  
+  th, td {
+    padding: 0.8em 0.6em;
+    white-space: nowrap;
   }
 }
 
 @media (max-width: 500px) {
+  #root {
+    padding: 0.25rem;
+  }
+  
   .card {
     max-width: 99vw;
-    padding: 0.7em 0.1em;
+    padding: 1em 0.8em;
+    margin: 1em auto 0 auto;
+    border-radius: 16px;
   }
+  
+  /* Stack navigation on very small screens */
+  .nav-tabs {
+    flex-direction: column;
+    gap: 0.4em;
+    padding: 0.6em 0;
+  }
+  
+  .nav-tabs a {
+    width: 90%;
+    text-align: center;
+    padding: 0.7em 1em;
+  }
+  
   input {
-    width: 95vw;
-    max-width: 99vw;
-    font-size: 1rem;
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+    min-height: 48px;
+    box-sizing: border-box;
   }
+  
   h2 {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.8em;
   }
+  
+  h3 {
+    font-size: 1rem;
+    margin-bottom: 0.6em;
+  }
+  
+  /* Full-width form elements */
+  .dashboard-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 1em !important;
+  }
+  
+  /* Larger touch targets */
+  button {
+    min-height: 52px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 1em 1.5em;
+    width: 100%;
+  }
+  
+  /* Compact table */
+  table {
+    min-width: 500px;
+    font-size: 0.85rem;
+  }
+  
+  th, td {
+    padding: 0.6em 0.4em;
+  }
+  
+  /* Floating action button adjustments */
+  .fab {
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 360px) {
+  .card {
+    padding: 0.8em 0.6em;
+    margin: 0.5em auto 0 auto;
+  }
+  
+  .nav-tabs a {
+    font-size: 0.9rem;
+    padding: 0.6em 0.8em;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+  }
+  
   h3 {
     font-size: 0.95rem;
+  }
+  
+  input, button, select, textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  
+  button {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+  
+  table {
+    min-width: 450px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Landscape orientation */
+@media (max-height: 500px) and (orientation: landscape) {
+  .card {
+    margin: 0.3em auto 0 auto;
+    padding: 0.8em;
+  }
+  
+  .nav-tabs {
+    padding: 0.4em 0;
+    margin-bottom: 0.5em;
+  }
+  
+  .dashboard-content {
+    gap: 1em;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.6em;
+  }
+  
+  h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5em;
   }
 }
 

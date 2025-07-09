@@ -191,7 +191,7 @@ const BulkEntry = () => {
         <form onSubmit={handleBulkSubmit}>
           <div style={{ marginBottom: 24 }}>
             <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                 <FiCalendar />
                 <span>From:</span>
                 <input 
@@ -199,17 +199,29 @@ const BulkEntry = () => {
                   value={startDate} 
                   onChange={e => setStartDate(e.target.value)} 
                   required 
-                  style={{ padding: 8, borderRadius: 6, border: '1px solid #ddd' }}
+                  style={{ 
+                    padding: '0.8em 1em', 
+                    borderRadius: 8, 
+                    border: '1px solid #ddd',
+                    minHeight: '44px',
+                    fontSize: '16px'
+                  }}
                 />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                 <span>To:</span>
                 <input 
                   type="date" 
                   value={endDate} 
                   onChange={e => setEndDate(e.target.value)} 
                   required 
-                  style={{ padding: 8, borderRadius: 6, border: '1px solid #ddd' }}
+                  style={{ 
+                    padding: '0.8em 1em', 
+                    borderRadius: 8, 
+                    border: '1px solid #ddd',
+                    minHeight: '44px',
+                    fontSize: '16px'
+                  }}
                 />
               </div>
               <motion.button 
@@ -263,7 +275,14 @@ const BulkEntry = () => {
                             placeholder="0.0" 
                             min="0" 
                             disabled={entry.off}
-                            style={{ width: '80px', padding: 6, borderRadius: 4, border: '1px solid #ddd' }}
+                            style={{ 
+                              width: '80px', 
+                              padding: '0.6em 0.8em', 
+                              borderRadius: 6, 
+                              border: '1px solid #ddd',
+                              minHeight: '40px',
+                              fontSize: '14px'
+                            }}
                           />
                         </td>
                         <td style={{ padding: 8 }}>
@@ -275,7 +294,14 @@ const BulkEntry = () => {
                             placeholder="0.0" 
                             min="0" 
                             disabled={entry.off}
-                            style={{ width: '80px', padding: 6, borderRadius: 4, border: '1px solid #ddd' }}
+                            style={{ 
+                              width: '80px', 
+                              padding: '0.6em 0.8em', 
+                              borderRadius: 6, 
+                              border: '1px solid #ddd',
+                              minHeight: '40px',
+                              fontSize: '14px'
+                            }}
                           />
                         </td>
                         <td style={{ padding: 8 }}>
@@ -287,7 +313,14 @@ const BulkEntry = () => {
                             placeholder="0.0" 
                             min="0" 
                             disabled={entry.off}
-                            style={{ width: '80px', padding: 6, borderRadius: 4, border: '1px solid #ddd' }}
+                            style={{ 
+                              width: '80px', 
+                              padding: '0.6em 0.8em', 
+                              borderRadius: 6, 
+                              border: '1px solid #ddd',
+                              minHeight: '40px',
+                              fontSize: '14px'
+                            }}
                           />
                         </td>
                         <td style={{ padding: 8 }}>
@@ -299,7 +332,14 @@ const BulkEntry = () => {
                             onChange={e => handleEntryChange(idx, 'cancellations', e.target.value)} 
                             placeholder="0" 
                             disabled={entry.off}
-                            style={{ width: '80px', padding: 6, borderRadius: 4, border: '1px solid #ddd' }}
+                            style={{ 
+                              width: '80px', 
+                              padding: '0.6em 0.8em', 
+                              borderRadius: 6, 
+                              border: '1px solid #ddd',
+                              minHeight: '40px',
+                              fontSize: '14px'
+                            }}
                           />
                         </td>
                         <td style={{ padding: 8, textAlign: 'center' }}>
@@ -307,7 +347,11 @@ const BulkEntry = () => {
                             type="checkbox" 
                             checked={entry.off} 
                             onChange={e => handleEntryChange(idx, 'off', e.target.checked)} 
-                            style={{ transform: 'scale(1.2)' }}
+                            style={{ 
+                              transform: 'scale(1.3)',
+                              minHeight: '20px',
+                              minWidth: '20px'
+                            }}
                           />
                         </td>
                         <td style={{ padding: 8 }}>
@@ -316,7 +360,14 @@ const BulkEntry = () => {
                             value={entry.notes} 
                             onChange={e => handleEntryChange(idx, 'notes', e.target.value)} 
                             placeholder="Notes" 
-                            style={{ width: '120px', padding: 6, borderRadius: 4, border: '1px solid #ddd' }}
+                            style={{ 
+                              width: '120px', 
+                              padding: '0.6em 0.8em', 
+                              borderRadius: 6, 
+                              border: '1px solid #ddd',
+                              minHeight: '40px',
+                              fontSize: '14px'
+                            }}
                           />
                         </td>
                       </tr>
