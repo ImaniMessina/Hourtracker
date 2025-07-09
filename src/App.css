@@ -1231,3 +1231,75 @@ textarea::placeholder {
     gap: 0.7em;
   }
 }
+
+/* --- Premium Goal/Pay Card Styles --- */
+.dashboard-goalpay-card {
+  background: rgba(24, 26, 27, 0.85);
+  box-shadow: 0 4px 32px #23272a33, 0 1.5px 8px #4ea8ff22;
+  border-radius: 2em;
+  padding: 2em 2.5em;
+  margin: 2em auto 2.5em auto;
+  max-width: 700px;
+  min-width: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+.goalpay-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2.5em;
+  flex-wrap: wrap;
+}
+.goalpay-hoursleft {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+  flex: 1 1 220px;
+  min-width: 180px;
+  white-space: pre-line;
+}
+.goalpay-divider {
+  display: block;
+  width: 2px;
+  height: 2.5em;
+  background: linear-gradient(180deg, #4ea8ff55 0%, #23272a00 100%);
+  margin: 0 2em;
+  border-radius: 2px;
+}
+.goalpay-estpay {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #4ea8ff;
+  flex: 1 1 180px;
+  min-width: 140px;
+  text-align: right;
+}
+.goalpay-payval {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  margin-left: 0.25em;
+}
+@media (max-width: 700px) {
+  .dashboard-goalpay-card {
+    padding: 1.2em 1em;
+    max-width: 98vw;
+  }
+  .goalpay-flex {
+    flex-direction: column;
+    gap: 1.2em;
+    align-items: stretch;
+  }
+  .goalpay-divider {
+    display: none;
+  }
+  .goalpay-estpay {
+    text-align: left;
+  }
+}

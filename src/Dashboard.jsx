@@ -366,45 +366,28 @@ export default function Dashboard() {
               <div className="dashboard-total-label">TOTAL HOURS</div>
             </div>
           </div>
-          <div className="dashboard-goal-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'nowrap', overflow: 'hidden', flex: 1 }}>
-            {goalLoading ? (
-              <span>Loading goal…</span>
-            ) : goal === null ? (
-              <span style={{ color: '#4EA8FF', fontWeight: 600 }}>Set your monthly goal in Settings</span>
-            ) : hoursLeft > 0 ? (
-              <>
-                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{hoursLeft.toFixed(1)} hours left to reach your goal of {goal}!</span>
-                <FiArrowRight style={{ fontSize: 28, color: '#4EA8FF', flexShrink: 0 }} />
-              </>
-            ) : (
-              <span style={{ color: '#4EA8FF' }}>Goal reached! 🎉</span>
-            )}
-            {schoolPayStructure && (
-              <div style={{ marginTop: 12, color: '#4EA8FF', fontWeight: 600, fontSize: '1rem' }}>
-                <span>School Pay Structure Active{schoolName ? `: ${schoolName}` : ''} ✔️</span>
-              </div>
-            )}
-            {payBlocks && payBlocks.length > 0 && (
-              <div style={{ marginTop: 12, color: '#4EA8FF', fontWeight: 600, fontSize: '1.1rem' }}>
-                Estimated Pay: ${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-              </div>
-            )}
-            {(cancellationPayType === 'threshold' || cancellationPayType === 'perHour') && (
-              <div style={{ marginTop: 8, color: '#4EA8FF', fontWeight: 600, fontSize: '1.05rem' }}>
-                Cancellation Pay: ${cancellationPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-              </div>
-            )}
-          </div>
           <motion.button
             onClick={handleLogout}
             className="dashboard-logout-btn"
             whileHover={{ scale: 1.15, backgroundColor: '#23272A' }}
             whileTap={{ scale: 0.95 }}
             title="Logout"
-            style={{ position: 'absolute', top: 24, right: 24 }}
+            style={{ position: 'absolute', top: 24, right: 24, zIndex: 10 }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4EA8FF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </motion.button>
+        </div>
+        {/* Premium Goal/Pay Card */}
+        <div className="dashboard-goalpay-card">
+          <div className="goalpay-flex">
+            <span className="goalpay-hoursleft">
+              {goalLoading ? 'Loading…' : goal === null ? 'Set your monthly goal in Settings' : hoursLeft > 0 ? `${hoursLeft.toFixed(1)} hours left to reach your goal of ${goal}!` : 'Goal reached! 🎉'}
+            </span>
+            <span className="goalpay-divider" />
+            <span className="goalpay-estpay">
+              Estimated Pay: <span className="goalpay-payval">${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+            </span>
+          </div>
         </div>
         {/* Main content: horizontal layout for form and table */}
         <div className="dashboard-content with-divider">
