@@ -339,7 +339,7 @@ export default function Dashboard() {
         style={{ position: 'relative', paddingTop: '2.5em' }}
       >
         {/* Top bar with month, total hours, and logout icon */}
-        <div className="dashboard-topbar">
+        <div className="dashboard-topbar" style={{ position: 'relative' }}>
           <div className="dashboard-heading-wrap">
             <div className="dashboard-monthyear">{monthYear}</div>
             <div className="dashboard-progress-row">
@@ -366,7 +366,7 @@ export default function Dashboard() {
               <div className="dashboard-total-label">TOTAL HOURS</div>
             </div>
           </div>
-          <div className="dashboard-goal-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'nowrap', overflow: 'hidden' }}>
+          <div className="dashboard-goal-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'nowrap', overflow: 'hidden', flex: 1 }}>
             {goalLoading ? (
               <span>Loading goal…</span>
             ) : goal === null ? (
@@ -401,6 +401,7 @@ export default function Dashboard() {
             whileHover={{ scale: 1.15, backgroundColor: '#23272A' }}
             whileTap={{ scale: 0.95 }}
             title="Logout"
+            style={{ position: 'absolute', top: 24, right: 24 }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4EA8FF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </motion.button>
