@@ -366,13 +366,16 @@ export default function Dashboard() {
               <div className="dashboard-total-label">TOTAL HOURS</div>
             </div>
           </div>
-          <div className="dashboard-goal-box">
+          <div className="dashboard-goal-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
             {goalLoading ? (
               <span>Loading goal…</span>
             ) : goal === null ? (
               <span style={{ color: '#4EA8FF', fontWeight: 600 }}>Set your monthly goal in Settings</span>
             ) : hoursLeft > 0 ? (
-              <span>{hoursLeft.toFixed(1)} hours left to reach your goal of {goal}!</span>
+              <>
+                <span>{hoursLeft.toFixed(1)} hours left to reach your goal of {goal}!</span>
+                {/* If you want an arrow icon, place it here, spaced to the right */}
+              </>
             ) : (
               <span style={{ color: '#4EA8FF' }}>Goal reached! 🎉</span>
             )}
@@ -501,7 +504,10 @@ export default function Dashboard() {
                 minHeight: '48px',
                 fontSize: '1rem',
                 boxShadow: 'none',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                marginLeft: 0,
+                marginRight: 0,
+                alignSelf: 'center',
               }}
             >
               Bulk Add
