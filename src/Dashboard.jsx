@@ -484,6 +484,7 @@ export default function Dashboard() {
               disabled={loading}
               whileTap={{ scale: 0.97 }}
               className="dashboard-save-btn"
+              style={{ width: '100%', margin: 0 }}
             >
               {loading ? 'Saving...' : 'Save'}
             </motion.button>
@@ -493,7 +494,7 @@ export default function Dashboard() {
               style={{
                 display: 'block',
                 width: '100%',
-                marginTop: 12,
+                margin: '16px 0 0 0',
                 background: '#23272A',
                 color: '#4EA8FF',
                 fontWeight: 600,
@@ -502,12 +503,10 @@ export default function Dashboard() {
                 padding: '1em 2em',
                 textAlign: 'center',
                 textDecoration: 'none',
-                minHeight: '48px',
-                fontSize: '1rem',
+                minHeight: '52px',
+                fontSize: '1.1rem',
                 boxShadow: 'none',
                 transition: 'all 0.2s ease',
-                marginLeft: 0,
-                marginRight: 0,
                 alignSelf: 'center',
               }}
             >
