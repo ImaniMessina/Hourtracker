@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from './firebase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { collection, addDoc, Timestamp, query, where, getDocs, orderBy, doc, getDoc } from 'firebase/firestore';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -58,14 +58,6 @@ export default function Dashboard() {
   const [showForm, setShowForm] = useState(true);
   const [goal, setGoal] = useState(null);
   const [goalLoading, setGoalLoading] = useState(true);
-  const [showBulk, setShowBulk] = useState(false);
-  const [bulkDate, setBulkDate] = useState(getToday());
-  const [bulkRows, setBulkRows] = useState([
-    { flight: '', prepost: '', ground: '', off: false, notes: '', cancellations: '' }
-  ]);
-  const [bulkLoading, setBulkLoading] = useState(false);
-  const [bulkSuccess, setBulkSuccess] = useState('');
-  const [bulkError, setBulkError] = useState('');
   const [payBlocks, setPayBlocks] = useState([]);
   const [schoolPayStructure, setSchoolPayStructure] = useState(false);
   const [schoolName, setSchoolName] = useState('');
@@ -295,41 +287,6 @@ export default function Dashboard() {
     setLoading(false);
   };
 
-  const handleBulkChange = (idx, field, value) => {
-    setBulkRows(rows => rows.map((row, i) => i === idx ? { ...row, [field]: value } : row));
-  };
-  const addBulkRow = () => setBulkRows(rows => [...rows, { flight: '', prepost: '', ground: '', off: false, notes: '', cancellations: '' }]);
-  const removeBulkRow = (idx) => setBulkRows(rows => rows.length > 1 ? rows.filter((_, i) => i !== idx) : rows);
-  const handleBulkSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) {
-      setBulkError('You must be logged in to add entries.');
-      return;
-    }
-    setBulkLoading(true); setBulkSuccess(''); setBulkError('');
-    try {
-      for (const row of bulkRows) {
-        await addDoc(collection(db, 'hours'), {
-          uid: user.uid,
-          date: bulkDate,
-          flight: row.off ? 0 : parseFloat(row.flight) || 0,
-          prepost: row.off ? 0 : parseFloat(row.prepost) || 0,
-          ground: row.off ? 0 : parseFloat(row.ground) || 0,
-          cancellations: parseInt(row.cancellations) || 0,
-          off: !!row.off,
-          notes: row.notes || '',
-          created: Timestamp.now(),
-        });
-      }
-      setBulkSuccess('Entries added!');
-      setBulkRows([{ flight: '', prepost: '', ground: '', off: false, notes: '', cancellations: '' }]);
-    } catch (err) {
-      setBulkError('Error adding entries.');
-      console.error('Bulk entry error:', err);
-    }
-    setBulkLoading(false);
-  };
-
   if (!user) return null;
 
   // Get current month/year for heading
@@ -458,35 +415,10 @@ export default function Dashboard() {
             >
               {loading ? 'Saving...' : 'Save'}
             </motion.button>
-            <button type="button" onClick={() => setShowBulk(b => !b)} style={{ marginTop: 16, background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
-              {showBulk ? 'Close Bulk Add' : 'Bulk Add'}
-            </button>
+            <Link to="/bulk-entry" style={{ display: 'block', marginTop: 16, background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', textAlign: 'center', textDecoration: 'none' }}>
+              Bulk Add
+            </Link>
           </form>
-          {/* Bulk Add Form */}
-          {showBulk && (
-            <form onSubmit={handleBulkSubmit} style={{ minWidth: 320, maxWidth: 400, flex: 1, background: 'rgba(24,26,27,0.7)', borderRadius: 16, padding: '2em 1.5em', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', marginTop: 24 }}>
-              <h3>Bulk Add Entries for a Day</h3>
-              <input type="date" value={bulkDate} onChange={e => setBulkDate(e.target.value)} required style={{ marginBottom: 16 }} />
-              {bulkRows.map((row, idx) => (
-                <div key={idx} className="bulk-row">
-                  <input type="number" step="0.1" value={row.flight} onChange={e => handleBulkChange(idx, 'flight', e.target.value)} placeholder="Flight" min="0" />
-                  <input type="number" step="0.1" value={row.prepost} onChange={e => handleBulkChange(idx, 'prepost', e.target.value)} placeholder="Pre/Post" min="0" />
-                  <input type="number" step="0.1" value={row.ground} onChange={e => handleBulkChange(idx, 'ground', e.target.value)} placeholder="Ground" min="0" />
-                  <input type="number" step="1" min="0" value={row.cancellations} onChange={e => handleBulkChange(idx, 'cancellations', e.target.value)} placeholder="Cancellation Hours" />
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: 12 }}>
-                    <input type="checkbox" checked={row.off} onChange={e => handleBulkChange(idx, 'off', e.target.checked)} /> OFF
-                  </label>
-                  <input type="text" value={row.notes} onChange={e => handleBulkChange(idx, 'notes', e.target.value)} placeholder="Notes" />
-                  <button type="button" onClick={() => removeBulkRow(idx)} style={{ background: 'none', color: '#888', border: 'none', fontSize: 18, cursor: 'pointer' }} disabled={bulkRows.length === 1}>×</button>
-                </div>
-              ))}
-              <button type="button" onClick={addBulkRow} style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.5em 1em', marginBottom: 12, cursor: 'pointer' }}>Add Row</button>
-              <br />
-              <button type="submit" disabled={bulkLoading} style={{ marginTop: 8 }}>{bulkLoading ? 'Saving...' : 'Save All'}</button>
-              {bulkSuccess && <div style={{ color: '#4EA8FF', marginTop: 12 }}>{bulkSuccess}</div>}
-              {bulkError && <div style={{ color: 'salmon', marginTop: 12 }}>{bulkError}</div>}
-            </form>
-          )}
           {/* Table Section */}
           <div className="dashboard-table" style={{ flex: 2, marginTop: 0, background: 'rgba(24, 26, 27, 0.85)', borderRadius: 18, padding: '2em 1.5em', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', overflowX: 'auto', position: 'relative' }}>
             <h3 style={{ marginBottom: 24 }}><FiCalendar style={{ marginRight: 8, verticalAlign: 'middle' }} /> Entries This Month</h3>

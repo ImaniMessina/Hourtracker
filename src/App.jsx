@@ -14,6 +14,7 @@ import Dashboard from './Dashboard';
 import PastMonths from './PastMonths';
 import Settings from './Settings';
 import PayStructure from './PayStructure';
+import BulkEntry from './BulkEntry';
 import { auth } from './firebase';
 
 function NavTabs() {
@@ -54,6 +55,7 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/bulk-entry" element={<BulkEntry />} />
         <Route path="/past-months" element={<PastMonths />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/pay-structure" element={<PayStructure />} />
