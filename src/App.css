@@ -568,16 +568,7 @@
   position: relative !important;
 }
 .dashboard-content.with-divider::before {
-  content: '' !important;
-  display: block !important;
-  position: absolute !important;
-  left: 50% !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  width: 2px !important;
-  background: linear-gradient(to bottom, #4EA8FF22 0%, #23272A44 100%) !important;
-  border-radius: 2px !important;
-  z-index: 1 !important;
+  display: none !important;
 }
 .dashboard-form, .dashboard-table-section {
   position: relative !important;
