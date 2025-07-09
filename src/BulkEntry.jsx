@@ -50,8 +50,8 @@ const BulkEntry = () => {
 
       // Check if entries already exist for this date
       const existingQuery = query(
-        collection(db, 'entries'),
-        where('userId', '==', userId),
+        collection(db, 'hours'),
+        where('uid', '==', userId),
         where('date', '==', bulkDate)
       );
       const existingDocs = await getDocs(existingQuery);
@@ -64,8 +64,8 @@ const BulkEntry = () => {
 
       // Add all entries
       const promises = entriesToAdd.map(row => 
-        addDoc(collection(db, 'entries'), {
-          userId,
+        addDoc(collection(db, 'hours'), {
+          uid: userId,
           date: bulkDate,
           flight: parseFloat(row.flight) || 0,
           prepost: parseFloat(row.prepost) || 0,
@@ -73,7 +73,7 @@ const BulkEntry = () => {
           cancellations: parseInt(row.cancellations) || 0,
           off: row.off,
           notes: row.notes || '',
-          timestamp: new Date()
+          created: new Date()
         })
       );
 
