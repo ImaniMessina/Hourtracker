@@ -4,6 +4,7 @@ import { collection, query, where, getDocs, orderBy, doc, updateDoc, deleteDoc, 
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FiTrash2 } from 'react-icons/fi';
+import EditEntryModal from './EditEntryModal';
 
 const months = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -43,6 +44,8 @@ export default function PastMonths() {
   const [search, setSearch] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({ date: '', flight: '', prepost: '', ground: '', cancellations: '', off: false, notes: '' });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [payBlocks, setPayBlocks] = useState([]);
   const [schoolPayStructure, setSchoolPayStructure] = useState(false);
@@ -159,22 +162,27 @@ export default function PastMonths() {
       off: !!entry.off,
       notes: entry.notes || '',
     });
+    setModalOpen(true);
   };
-  const cancelEdit = () => {
+  const handleModalClose = () => {
+    setModalOpen(false);
     setEditingId(null);
     setEditData({ date: '', flight: '', prepost: '', ground: '', cancellations: '', off: false, notes: '' });
   };
-  const saveEdit = async (id) => {
-    const ref = doc(db, 'hours', id);
+  const handleModalSave = async (form) => {
+    setModalLoading(true);
+    const ref = doc(db, 'hours', editingId);
     await updateDoc(ref, {
-      date: editData.date,
-      flight: parseFloat(editData.flight) || 0,
-      prepost: parseFloat(editData.prepost) || 0,
-      ground: parseFloat(editData.ground) || 0,
-      cancellations: parseInt(editData.cancellations) || 0,
-      off: !!editData.off,
-      notes: editData.notes || '',
+      date: form.date,
+      flight: parseFloat(form.flight) || 0,
+      prepost: parseFloat(form.prepost) || 0,
+      ground: parseFloat(form.ground) || 0,
+      cancellations: parseInt(form.cancellations) || 0,
+      off: !!form.off,
+      notes: form.notes || '',
     });
+    setModalLoading(false);
+    setModalOpen(false);
     setEditingId(null);
     setEditData({ date: '', flight: '', prepost: '', ground: '', cancellations: '', off: false, notes: '' });
     // Refresh entries
@@ -365,46 +373,30 @@ export default function PastMonths() {
             <tr><td colSpan="8" style={{ textAlign: 'center', opacity: 0.7 }}>No entries for this range.</td></tr>
           ) : (
             filteredEntries.map(e => (
-              editingId === e.id ? (
-                <tr className="edit-row">
-                  <td><input type="date" value={editData.date} onChange={ev => setEditData(d => ({ ...d, date: ev.target.value }))} className="edit-row-input" /></td>
-                  <td><input type="number" step="0.1" value={editData.flight} onChange={ev => setEditData(d => ({ ...d, flight: ev.target.value }))} className="edit-row-input" /></td>
-                  <td><input type="number" step="0.1" value={editData.prepost} onChange={ev => setEditData(d => ({ ...d, prepost: ev.target.value }))} className="edit-row-input" /></td>
-                  <td><input type="number" step="0.1" value={editData.ground} onChange={ev => setEditData(d => ({ ...d, ground: ev.target.value }))} className="edit-row-input" /></td>
-                  <td><input type="number" step="1" min="0" value={editData.cancellations} onChange={ev => setEditData(d => ({ ...d, cancellations: ev.target.value }))} className="edit-row-input" /></td>
-                  <td style={{ textAlign: 'center' }}><input type="checkbox" checked={editData.off} onChange={ev => setEditData(d => ({ ...d, off: ev.target.checked }))} className="edit-row-checkbox" /></td>
-                  <td><input type="text" value={editData.notes} onChange={ev => setEditData(d => ({ ...d, notes: ev.target.value }))} className="edit-row-input edit-row-notes" /></td>
-                  <td colSpan="2" className="edit-row-actions">
-                    <button onClick={() => saveEdit(e.id)} className="edit-row-save">Save</button>
-                    <button onClick={cancelEdit} className="edit-row-cancel">Cancel</button>
-                  </td>
-                </tr>
-              ) : (
-                <tr key={e.id}>
-                  <td>{e.date}</td>
-                  <td>{e.flight}</td>
-                  <td>{e.prepost}</td>
-                  <td>{e.ground}</td>
-                  <td>{e.cancellations || 0}</td>
-                  <td>{e.off ? '✔️' : ''}</td>
-                  <td>{e.notes || ''}</td>
-                  <td>
-                    <button onClick={() => startEdit(e)}>Edit</button>
-                  </td>
-                  <td>
-                    {deletingId === e.id ? (
-                      <>
-                        <button onClick={() => confirmDelete(e.id)} style={{ color: 'red', marginRight: 8 }}>Confirm</button>
-                        <button onClick={() => setDeletingId(null)}>Cancel</button>
-                      </>
-                    ) : (
-                      <button onClick={() => setDeletingId(e.id)} style={{ background: 'none', border: 'none', color: '#888', padding: 4, cursor: 'pointer' }} title="Delete">
-                        <FiTrash2 size={18} />
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              )
+              <tr key={e.id}>
+                <td>{e.date}</td>
+                <td>{e.flight}</td>
+                <td>{e.prepost}</td>
+                <td>{e.ground}</td>
+                <td>{e.cancellations || 0}</td>
+                <td>{e.off ? '✔️' : ''}</td>
+                <td>{e.notes || ''}</td>
+                <td>
+                  <button onClick={() => startEdit(e)}>Edit</button>
+                </td>
+                <td>
+                  {deletingId === e.id ? (
+                    <>
+                      <button onClick={() => confirmDelete(e.id)} style={{ color: 'red', marginRight: 8 }}>Confirm</button>
+                      <button onClick={() => setDeletingId(null)}>Cancel</button>
+                    </>
+                  ) : (
+                    <button onClick={() => setDeletingId(e.id)} style={{ background: 'none', border: 'none', color: '#888', padding: 4, cursor: 'pointer' }} title="Delete">
+                      <FiTrash2 size={18} />
+                    </button>
+                  )}
+                </td>
+              </tr>
             ))
           )}
         </tbody>
@@ -420,6 +412,13 @@ export default function PastMonths() {
           </tr>
         </tfoot>
       </table>
+      <EditEntryModal
+        open={modalOpen}
+        onClose={handleModalClose}
+        onSave={handleModalSave}
+        entry={editData}
+        loading={modalLoading}
+      />
     </div>
   );
 } 
