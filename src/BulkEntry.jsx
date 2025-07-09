@@ -91,58 +91,42 @@ const BulkEntry = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        style={{ maxWidth: 600, margin: '2em auto' }}
+        style={{ maxWidth: 1100, margin: '2em auto', padding: '2.5em 2.5em' }}
       >
         <h2>Bulk Entry</h2>
         <p style={{ color: '#888', marginBottom: 20 }}>
           Add entries for any day. Fill in the details, click Add Entry, and repeat for as many days as you want. Save all at once when done.
         </p>
         <form onSubmit={handleBulkSubmit}>
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: 16,
-            marginBottom: 28,
-            background: 'rgba(35,39,42,0.85)',
-            borderRadius: 14,
-            boxShadow: '0 2px 12px #4EA8FF22',
-            padding: '1.2em 1em',
-            border: '1.5px solid #23272A',
-            maxWidth: 700,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}>
-            <input 
-              type="date" 
-              value={current.date} 
-              onChange={e => handleChange('date', e.target.value)} 
-              required 
-              style={{ minWidth: 120, flex: '1 1 120px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }}
-            />
-            <input type="number" step="0.1" min="0" placeholder="Flight" value={current.flight} onChange={e => handleChange('flight', e.target.value)} style={{ minWidth: 80, flex: '1 1 80px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} disabled={current.off} />
-            <input type="number" step="0.1" min="0" placeholder="Pre/Post" value={current.prepost} onChange={e => handleChange('prepost', e.target.value)} style={{ minWidth: 80, flex: '1 1 80px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} disabled={current.off} />
-            <input type="number" step="0.1" min="0" placeholder="Ground" value={current.ground} onChange={e => handleChange('ground', e.target.value)} style={{ minWidth: 80, flex: '1 1 80px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} disabled={current.off} />
-            <input type="number" step="1" min="0" placeholder="Cancellations" value={current.cancellations} onChange={e => handleChange('cancellations', e.target.value)} style={{ minWidth: 80, flex: '1 1 80px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} disabled={current.off} />
-            <label style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#fff', fontWeight: 500, fontSize: 15 }}>
-              <input type="checkbox" checked={current.off} onChange={e => handleChange('off', e.target.checked)} style={{ transform: 'scale(1.2)', marginRight: 4 }} /> OFF
-            </label>
-            <input type="text" placeholder="Notes" value={current.notes} onChange={e => handleChange('notes', e.target.value)} style={{ minWidth: 120, flex: '2 1 120px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} />
-            <motion.button 
-              type="button" 
-              onClick={handleAddEntry}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{ background: '#4EA8FF', color: 'white', border: 'none', padding: '0.9em 1.5em', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 17, marginLeft: 'auto', minWidth: 130 }}
-            >
-              <FiPlus /> Add Entry
-            </motion.button>
+          <div className="bulk-form-grid">
+            <div className="bulk-form-row">
+              <input type="date" value={current.date} onChange={e => handleChange('date', e.target.value)} required className="bulk-input" />
+              <input type="number" step="0.1" min="0" placeholder="Flight" value={current.flight} onChange={e => handleChange('flight', e.target.value)} className="bulk-input" disabled={current.off} />
+              <input type="number" step="0.1" min="0" placeholder="Pre/Post" value={current.prepost} onChange={e => handleChange('prepost', e.target.value)} className="bulk-input" disabled={current.off} />
+              <input type="number" step="0.1" min="0" placeholder="Ground" value={current.ground} onChange={e => handleChange('ground', e.target.value)} className="bulk-input" disabled={current.off} />
+              <input type="number" step="1" min="0" placeholder="Cancellations" value={current.cancellations} onChange={e => handleChange('cancellations', e.target.value)} className="bulk-input" disabled={current.off} />
+            </div>
+            <div className="bulk-form-row">
+              <label className="bulk-off-label">
+                <input type="checkbox" checked={current.off} onChange={e => handleChange('off', e.target.checked)} /> OFF
+              </label>
+              <input type="text" placeholder="Notes" value={current.notes} onChange={e => handleChange('notes', e.target.value)} className="bulk-input bulk-notes-input" />
+              <motion.button 
+                type="button" 
+                onClick={handleAddEntry}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bulk-add-btn"
+              >
+                <FiPlus /> Add Entry
+              </motion.button>
+            </div>
           </div>
 
           {entries.length > 0 && (
-            <div style={{ marginBottom: 24 }}>
-              <h3 style={{ marginBottom: 12, color: '#4EA8FF', letterSpacing: 2 }}>Entries ({entries.length})</h3>
-              <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(24,26,27,0.7)', borderRadius: 12 }}>
+            <div className="bulk-table-container">
+              <h3 style={{ marginBottom: 18, color: '#4EA8FF', letterSpacing: 2, paddingLeft: 24, paddingTop: 18, fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 3 }}>Entries ({entries.length})</h3>
+              <table className="bulk-table">
                 <thead>
                   <tr style={{ background: 'rgba(35,39,42,0.85)' }}>
                     <th>Date</th>
@@ -152,7 +136,7 @@ const BulkEntry = () => {
                     <th>Cancellations</th>
                     <th>OFF</th>
                     <th>Notes</th>
-                    <th></th>
+                    <th style={{ width: 56, textAlign: 'center' }}></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -164,9 +148,9 @@ const BulkEntry = () => {
                       <td>{entry.ground}</td>
                       <td>{entry.cancellations}</td>
                       <td>{entry.off ? '✔️' : ''}</td>
-                      <td>{entry.notes}</td>
-                      <td>
-                        <button type="button" onClick={() => handleRemoveEntry(idx)} style={{ background: 'none', border: 'none', color: '#4EA8FF', cursor: 'pointer', fontSize: 18 }} title="Remove"><FiTrash2 /></button>
+                      <td style={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{entry.notes}</td>
+                      <td style={{ textAlign: 'center', padding: 0 }}>
+                        <button type="button" onClick={() => handleRemoveEntry(idx)} style={{ background: 'none', border: 'none', color: '#4EA8FF', cursor: 'pointer', fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, margin: '0 auto' }} title="Remove"><FiTrash2 /></button>
                       </td>
                     </tr>
                   ))}

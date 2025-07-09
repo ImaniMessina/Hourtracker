@@ -786,3 +786,284 @@ textarea::placeholder {
   opacity: 1;
   font-size: 1.05em;
 }
+
+/* --- Bulk Entry Table Container --- */
+.bulk-table-container {
+  margin-bottom: 24px;
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #4EA8FF22;
+  background: rgba(24,26,27,0.7);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 8px; /* for scrollbar visibility */
+}
+
+.bulk-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.bulk-table th, .bulk-table td {
+  padding: 0.8em 0.6em;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .bulk-table-container {
+    max-width: 98vw;
+  }
+  .bulk-table {
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 700px) {
+  .bulk-table-container {
+    max-width: 100vw;
+    border-radius: 10px;
+    padding-bottom: 6px;
+  }
+  .bulk-table {
+    min-width: 500px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bulk-table-container {
+    max-width: 100vw;
+    border-radius: 8px;
+    padding-bottom: 4px;
+  }
+  .bulk-table {
+    min-width: 400px;
+    font-size: 0.85rem;
+  }
+}
+
+/* --- Bulk Entry Form Modern Layout --- */
+.bulk-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 32px;
+  background: rgba(35,39,42,0.85);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px #4EA8FF22;
+  padding: 1.5em 1.5em 1.2em 1.5em;
+  border: 1.5px solid #23272A;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bulk-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  width: 100%;
+}
+
+.bulk-input {
+  background: rgba(24,26,27,0.7);
+  color: #fff;
+  border: 1.5px solid #23272A;
+  border-radius: 10px;
+  padding: 0.8em 1.1em;
+  font-size: 1.08rem;
+  min-width: 120px;
+  flex: 1 1 120px;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px #4EA8FF11;
+}
+.bulk-input:focus {
+  border: 1.5px solid #4EA8FF;
+  outline: none;
+  box-shadow: 0 2px 8px #4EA8FF33;
+}
+
+.bulk-notes-input {
+  min-width: 180px;
+  flex: 2 1 180px;
+}
+
+/* --- Bulk Entry OFF Toggle Modern --- */
+.bulk-off-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.6em 2.2em 0.6em 2.2em;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(35,39,42,0.95) 60%, rgba(24,26,27,0.85) 100%);
+  box-shadow: 0 1px 6px #4EA8FF11;
+  border: 1.5px solid #23272A;
+  min-width: 160px;
+  min-height: 48px;
+  margin: 0 auto;
+  letter-spacing: 1px;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.bulk-off-label input[type="checkbox"] {
+  transform: scale(1.5);
+  accent-color: #4EA8FF;
+  margin-right: 0;
+  margin-left: 0;
+  box-shadow: 0 1px 4px #4EA8FF33;
+  border-radius: 6px;
+  border: 1.5px solid #23272A;
+  background: #181A1B;
+  width: 26px;
+  height: 26px;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+.bulk-off-label:hover, .bulk-off-label:focus-within {
+  border: 1.5px solid #4EA8FF;
+  box-shadow: 0 2px 12px #4EA8FF33;
+  background: linear-gradient(90deg, rgba(35,39,42,1) 60%, rgba(78,168,255,0.18) 100%);
+}
+
+.bulk-add-btn {
+  background: linear-gradient(90deg, #4EA8FF 60%, #2569EB 100%);
+  color: white;
+  border: none;
+  padding: 1em 2em;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-left: auto;
+  min-width: 150px;
+  box-shadow: 0 2px 8px #4EA8FF33;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.bulk-add-btn:hover, .bulk-add-btn:focus {
+  background: linear-gradient(90deg, #2569EB 60%, #4EA8FF 100%);
+  box-shadow: 0 4px 16px #4EA8FF44;
+}
+
+@media (max-width: 900px) {
+  .bulk-form-grid {
+    max-width: 98vw;
+    padding: 1.2em 0.8em 1em 0.8em;
+  }
+  .bulk-form-row {
+    gap: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .bulk-form-grid {
+    max-width: 100vw;
+    border-radius: 12px;
+    padding: 1em 0.5em 0.8em 0.5em;
+  }
+  .bulk-form-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8em;
+  }
+  .bulk-input, .bulk-notes-input {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  .bulk-add-btn {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+  }
+}
+
+/* --- Past Months Edit Row Premium Styles --- */
+.edit-row {
+  background: linear-gradient(90deg, rgba(78,168,255,0.10) 0%, rgba(35,39,42,0.18) 100%);
+  border-bottom: 2px solid #4EA8FF;
+  box-shadow: 0 2px 12px #4EA8FF22;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.edit-row-input {
+  width: 100%;
+  min-width: 60px;
+  max-width: 120px;
+  background: rgba(24,26,27,0.7);
+  color: #fff;
+  border: 1.5px solid #4EA8FF;
+  border-radius: 8px;
+  padding: 0.7em 1em;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px #4EA8FF11;
+  margin: 0 auto;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.edit-row-input:focus {
+  border: 1.5px solid #2569EB;
+  outline: none;
+  box-shadow: 0 2px 8px #4EA8FF33;
+}
+.edit-row-notes {
+  min-width: 120px;
+  max-width: 200px;
+}
+.edit-row-checkbox {
+  transform: scale(1.3);
+  accent-color: #4EA8FF;
+  margin: 0 auto;
+  width: 22px;
+  height: 22px;
+}
+.edit-row-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.edit-row-save {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.7em 1.3em;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 1px 4px #28a74533;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.edit-row-save:hover, .edit-row-save:focus {
+  background: #218838;
+  box-shadow: 0 2px 8px #28a74544;
+}
+.edit-row-cancel {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.7em 1.3em;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 1px 4px #6c757d33;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.edit-row-cancel:hover, .edit-row-cancel:focus {
+  background: #495057;
+  box-shadow: 0 2px 8px #6c757d44;
+}
+/* Hide trash icon in edit row (if present) */
+.edit-row .fi-trash2, .edit-row button[title="Delete"] {
+  display: none !important;
+}

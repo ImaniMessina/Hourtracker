@@ -210,13 +210,50 @@ export default function PastMonths() {
     const title = `${startDate} to ${endDate} - Flight Hours`;
     doc.setFontSize(18);
     doc.text(title, 14, 18);
-    const tableData = filteredEntries.map(e => [e.date, e.flight, e.prepost, e.ground, e.cancellations || 0, e.off ? '✔️' : '', e.notes || '']);
+    // Use a plain checkmark for OFF, blank otherwise
+    const tableData = filteredEntries.map(e => [
+      e.date,
+      e.flight,
+      e.prepost,
+      e.ground,
+      e.cancellations || 0,
+      e.off ? 'X' : '',
+      e.notes || ''
+    ]);
     doc.autoTable({
-      head: [['Date', 'Flight', 'Pre/Post', 'Ground', 'Cancellations', 'OFF', 'Notes']],
+      head: [[
+        'Date', 'Flight', 'Pre/Post', 'Ground', 'Cancellations', 'OFF', 'Notes'
+      ]],
       body: tableData,
       startY: 28,
       theme: 'grid',
-      headStyles: { fillColor: [78, 168, 255] },
+      headStyles: {
+        fillColor: [37, 99, 235], // deeper blue
+        textColor: 255,
+        fontStyle: 'bold',
+        fontSize: 13,
+        halign: 'center',
+        valign: 'middle',
+        cellPadding: 4,
+      },
+      bodyStyles: {
+        fontSize: 12,
+        cellPadding: 3.5,
+        halign: 'center',
+        valign: 'middle',
+        lineColor: [220, 230, 245],
+        lineWidth: 0.2,
+      },
+      alternateRowStyles: {
+        fillColor: [245, 248, 255],
+      },
+      styles: {
+        overflow: 'linebreak',
+        minCellHeight: 10,
+        font: 'helvetica',
+      },
+      tableLineColor: [220, 230, 245],
+      tableLineWidth: 0.2,
     });
     // Add totals row
     doc.autoTable({
@@ -226,18 +263,18 @@ export default function PastMonths() {
         totals.prepost.toFixed(1),
         totals.ground.toFixed(1),
         totals.cancellations,
-        '',
-        ''
+        '', // OFF column: always blank, ensure no stray value
+        ''  // Notes column: always blank, ensure no stray value
       ]],
       startY: doc.lastAutoTable.finalY + 2,
       theme: 'plain',
-      styles: { fontStyle: 'bold' },
+      styles: { fontStyle: 'bold', fontSize: 13, halign: 'center', textColor: [37,99,235] },
     });
     doc.save(`${startDate}_to_${endDate}_FlightHours.pdf`);
   };
 
   return (
-    <div className="card">
+    <div className="card" style={{ maxWidth: 1100, margin: '2em auto', padding: '2.5em 2.5em' }}>
       <h2>Past Months</h2>
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
         <span>From</span>
@@ -329,96 +366,17 @@ export default function PastMonths() {
           ) : (
             filteredEntries.map(e => (
               editingId === e.id ? (
-                <tr key={e.id} style={{ background: 'rgba(78,168,255,0.08)' }}>
-                  <td>
-                    <input 
-                      type="date" 
-                      value={editData.date} 
-                      onChange={ev => setEditData(d => ({ ...d, date: ev.target.value }))}
-                      style={{ padding: 6, borderRadius: 4, border: '1px solid #ddd', width: '100%' }}
-                    />
-                  </td>
-                  <td>
-                    <input 
-                      type="number" 
-                      step="0.1" 
-                      value={editData.flight} 
-                      onChange={ev => setEditData(d => ({ ...d, flight: ev.target.value }))}
-                      style={{ padding: 6, borderRadius: 4, border: '1px solid #ddd', width: '60px' }}
-                    />
-                  </td>
-                  <td>
-                    <input 
-                      type="number" 
-                      step="0.1" 
-                      value={editData.prepost} 
-                      onChange={ev => setEditData(d => ({ ...d, prepost: ev.target.value }))}
-                      style={{ padding: 6, borderRadius: 4, border: '1px solid #ddd', width: '60px' }}
-                    />
-                  </td>
-                  <td>
-                    <input 
-                      type="number" 
-                      step="0.1" 
-                      value={editData.ground} 
-                      onChange={ev => setEditData(d => ({ ...d, ground: ev.target.value }))}
-                      style={{ padding: 6, borderRadius: 4, border: '1px solid #ddd', width: '60px' }}
-                    />
-                  </td>
-                  <td>
-                    <input 
-                      type="number" 
-                      step="1" 
-                      min="0" 
-                      value={editData.cancellations} 
-                      onChange={ev => setEditData(d => ({ ...d, cancellations: ev.target.value }))}
-                      style={{ padding: 6, borderRadius: 4, border: '1px solid #ddd', width: '60px' }}
-                    />
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    <input 
-                      type="checkbox" 
-                      checked={editData.off} 
-                      onChange={ev => setEditData(d => ({ ...d, off: ev.target.checked }))}
-                      style={{ transform: 'scale(1.2)' }}
-                    />
-                  </td>
-                  <td>
-                    <input 
-                      type="text" 
-                      value={editData.notes} 
-                      onChange={ev => setEditData(d => ({ ...d, notes: ev.target.value }))}
-                      style={{ padding: 6, borderRadius: 4, border: '1px solid #ddd', width: '120px' }}
-                    />
-                  </td>
-                  <td colSpan="2">
-                    <button 
-                      onClick={() => saveEdit(e.id)} 
-                      style={{ 
-                        marginRight: 8, 
-                        background: '#28a745', 
-                        color: 'white', 
-                        border: 'none', 
-                        padding: '4px 8px', 
-                        borderRadius: 4, 
-                        cursor: 'pointer' 
-                      }}
-                    >
-                      Save
-                    </button>
-                    <button 
-                      onClick={cancelEdit}
-                      style={{ 
-                        background: '#6c757d', 
-                        color: 'white', 
-                        border: 'none', 
-                        padding: '4px 8px', 
-                        borderRadius: 4, 
-                        cursor: 'pointer' 
-                      }}
-                    >
-                      Cancel
-                    </button>
+                <tr className="edit-row">
+                  <td><input type="date" value={editData.date} onChange={ev => setEditData(d => ({ ...d, date: ev.target.value }))} className="edit-row-input" /></td>
+                  <td><input type="number" step="0.1" value={editData.flight} onChange={ev => setEditData(d => ({ ...d, flight: ev.target.value }))} className="edit-row-input" /></td>
+                  <td><input type="number" step="0.1" value={editData.prepost} onChange={ev => setEditData(d => ({ ...d, prepost: ev.target.value }))} className="edit-row-input" /></td>
+                  <td><input type="number" step="0.1" value={editData.ground} onChange={ev => setEditData(d => ({ ...d, ground: ev.target.value }))} className="edit-row-input" /></td>
+                  <td><input type="number" step="1" min="0" value={editData.cancellations} onChange={ev => setEditData(d => ({ ...d, cancellations: ev.target.value }))} className="edit-row-input" /></td>
+                  <td style={{ textAlign: 'center' }}><input type="checkbox" checked={editData.off} onChange={ev => setEditData(d => ({ ...d, off: ev.target.checked }))} className="edit-row-checkbox" /></td>
+                  <td><input type="text" value={editData.notes} onChange={ev => setEditData(d => ({ ...d, notes: ev.target.value }))} className="edit-row-input edit-row-notes" /></td>
+                  <td colSpan="2" className="edit-row-actions">
+                    <button onClick={() => saveEdit(e.id)} className="edit-row-save">Save</button>
+                    <button onClick={cancelEdit} className="edit-row-cancel">Cancel</button>
                   </td>
                 </tr>
               ) : (
