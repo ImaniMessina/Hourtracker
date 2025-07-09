@@ -301,7 +301,12 @@ export default function Dashboard() {
   const addBulkRow = () => setBulkRows(rows => [...rows, { flight: '', prepost: '', ground: '', off: false, notes: '', cancellations: '' }]);
   const removeBulkRow = (idx) => setBulkRows(rows => rows.length > 1 ? rows.filter((_, i) => i !== idx) : rows);
   const handleBulkSubmit = async (e) => {
-    e.preventDefault(); setBulkLoading(true); setBulkSuccess(''); setBulkError('');
+    e.preventDefault();
+    if (!user) {
+      setBulkError('You must be logged in to add entries.');
+      return;
+    }
+    setBulkLoading(true); setBulkSuccess(''); setBulkError('');
     try {
       for (const row of bulkRows) {
         await addDoc(collection(db, 'hours'), {
@@ -320,6 +325,7 @@ export default function Dashboard() {
       setBulkRows([{ flight: '', prepost: '', ground: '', off: false, notes: '', cancellations: '' }]);
     } catch (err) {
       setBulkError('Error adding entries.');
+      console.error('Bulk entry error:', err);
     }
     setBulkLoading(false);
   };
@@ -462,15 +468,15 @@ export default function Dashboard() {
               <h3>Bulk Add Entries for a Day</h3>
               <input type="date" value={bulkDate} onChange={e => setBulkDate(e.target.value)} required style={{ marginBottom: 16 }} />
               {bulkRows.map((row, idx) => (
-                <div key={idx} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
-                  <input type="number" step="0.1" value={row.flight} onChange={e => handleBulkChange(idx, 'flight', e.target.value)} placeholder="Flight" min="0" style={{ width: 60 }} />
-                  <input type="number" step="0.1" value={row.prepost} onChange={e => handleBulkChange(idx, 'prepost', e.target.value)} placeholder="Pre/Post" min="0" style={{ width: 60 }} />
-                  <input type="number" step="0.1" value={row.ground} onChange={e => handleBulkChange(idx, 'ground', e.target.value)} placeholder="Ground" min="0" style={{ width: 60 }} />
-                  <input type="number" step="1" min="0" value={row.cancellations} onChange={e => handleBulkChange(idx, 'cancellations', e.target.value)} placeholder="Cancellation Hours" style={{ width: 60 }} />
+                <div key={idx} className="bulk-row">
+                  <input type="number" step="0.1" value={row.flight} onChange={e => handleBulkChange(idx, 'flight', e.target.value)} placeholder="Flight" min="0" />
+                  <input type="number" step="0.1" value={row.prepost} onChange={e => handleBulkChange(idx, 'prepost', e.target.value)} placeholder="Pre/Post" min="0" />
+                  <input type="number" step="0.1" value={row.ground} onChange={e => handleBulkChange(idx, 'ground', e.target.value)} placeholder="Ground" min="0" />
+                  <input type="number" step="1" min="0" value={row.cancellations} onChange={e => handleBulkChange(idx, 'cancellations', e.target.value)} placeholder="Cancellation Hours" />
                   <label style={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: 12 }}>
                     <input type="checkbox" checked={row.off} onChange={e => handleBulkChange(idx, 'off', e.target.checked)} /> OFF
                   </label>
-                  <input type="text" value={row.notes} onChange={e => handleBulkChange(idx, 'notes', e.target.value)} placeholder="Notes" style={{ width: 80 }} />
+                  <input type="text" value={row.notes} onChange={e => handleBulkChange(idx, 'notes', e.target.value)} placeholder="Notes" />
                   <button type="button" onClick={() => removeBulkRow(idx)} style={{ background: 'none', color: '#888', border: 'none', fontSize: 18, cursor: 'pointer' }} disabled={bulkRows.length === 1}>×</button>
                 </div>
               ))}
