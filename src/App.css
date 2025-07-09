@@ -994,16 +994,22 @@ textarea::placeholder {
   border-bottom: 2px solid #4EA8FF;
   box-shadow: 0 2px 12px #4EA8FF22;
   transition: background 0.2s, box-shadow 0.2s;
+  vertical-align: middle;
+  height: 64px;
+}
+.edit-row td {
+  padding: 0.5em 0.7em !important;
+  vertical-align: middle !important;
 }
 .edit-row-input {
   width: 100%;
-  min-width: 60px;
-  max-width: 120px;
+  min-width: 90px;
+  max-width: 180px;
   background: rgba(24,26,27,0.7);
   color: #fff;
   border: 1.5px solid #4EA8FF;
   border-radius: 8px;
-  padding: 0.7em 1em;
+  padding: 0.9em 1.2em;
   font-size: 1rem;
   box-shadow: 0 1px 4px #4EA8FF11;
   margin: 0 auto;
@@ -1015,8 +1021,8 @@ textarea::placeholder {
   box-shadow: 0 2px 8px #4EA8FF33;
 }
 .edit-row-notes {
-  min-width: 120px;
-  max-width: 200px;
+  min-width: 180px;
+  max-width: 320px;
 }
 .edit-row-checkbox {
   transform: scale(1.3);
@@ -1027,7 +1033,7 @@ textarea::placeholder {
 }
 .edit-row-actions {
   display: flex;
-  gap: 10px;
+  gap: 14px;
   justify-content: center;
   align-items: center;
 }
