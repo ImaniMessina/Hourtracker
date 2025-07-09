@@ -1,3 +1,4 @@
+/* cache-busting: 2024-07-08 */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -104,4 +105,49 @@
   background: rgba(78,168,255,0.12);
   color: #4EA8FF;
   opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .dashboard-form, .card, .dashboard-table, .settings-section {
+    width: 98vw !important;
+    max-width: 99vw !important;
+    min-width: unset !important;
+    padding: 2em 0.7em 2em 0.7em !important;
+    border-radius: 14px !important;
+    margin: 1.2em auto !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 2px 12px #23272A33 !important;
+  }
+  input, button, select {
+    width: 100% !important;
+    font-size: 1.1em !important;
+    box-sizing: border-box !important;
+    margin-bottom: 1.1em !important;
+    margin-top: 0.2em !important;
+  }
+  h3, h2 {
+    font-size: 1.2em !important;
+    margin-top: 1.2em !important;
+    margin-bottom: 0.7em !important;
+  }
+  .dashboard-content {
+    flex-direction: column !important;
+    gap: 20px !important;
+    align-items: stretch !important;
+  }
+  .nav-tabs {
+    flex-direction: column !important;
+    gap: 1.2em !important;
+    padding: 0.9em 0.2em !important;
+    border-radius: 0 0 16px 16px !important;
+    font-size: 1em !important;
+  }
+  .dashboard-table table, .dashboard-table th, .dashboard-table td {
+    font-size: 1em !important;
+    padding: 0.5em !important;
+  }
+  label {
+    margin-bottom: 0.7em !important;
+    display: block !important;
+  }
 }
