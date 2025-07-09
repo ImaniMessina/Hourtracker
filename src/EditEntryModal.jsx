@@ -39,19 +39,19 @@ export default function EditEntryModal({ open, onClose, onSave, entry, loading }
           <form onSubmit={handleSubmit} className="modal-form">
             <div className="modal-form-row">
               <label>Date
-                <input type="date" value={form.date || ''} onChange={e => handleChange('date', e.target.value)} required />
+                <input type="date" value={form.date || ''} onChange={e => handleChange('date', e.target.value)} />
               </label>
               <label>Flight
-                <input type="number" step="0.1" min="0" value={form.flight || ''} onChange={e => handleChange('flight', e.target.value)} required disabled={form.off} />
+                <input type="number" step="0.1" min="0" value={form.flight || ''} onChange={e => handleChange('flight', e.target.value)} disabled={form.off} />
               </label>
               <label>Pre/Post
-                <input type="number" step="0.1" min="0" value={form.prepost || ''} onChange={e => handleChange('prepost', e.target.value)} required disabled={form.off} />
+                <input type="number" step="0.1" min="0" value={form.prepost || ''} onChange={e => handleChange('prepost', e.target.value)} disabled={form.off} />
               </label>
               <label>Ground
-                <input type="number" step="0.1" min="0" value={form.ground || ''} onChange={e => handleChange('ground', e.target.value)} required disabled={form.off} />
+                <input type="number" step="0.1" min="0" value={form.ground || ''} onChange={e => handleChange('ground', e.target.value)} disabled={form.off} />
               </label>
               <label>Cancellations
-                <input type="number" step="1" min="0" value={form.cancellations || ''} onChange={e => handleChange('cancellations', e.target.value)} required disabled={form.off} />
+                <input type="number" step="1" min="0" value={form.cancellations || ''} onChange={e => handleChange('cancellations', e.target.value)} disabled={form.off} />
               </label>
             </div>
             <div className="modal-form-row">
