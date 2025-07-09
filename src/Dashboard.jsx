@@ -378,14 +378,17 @@ export default function Dashboard() {
           </motion.button>
         </div>
         {/* Premium Goal/Pay Card */}
-        <div className="dashboard-goalpay-card">
+        <div className="dashboard-goalpay-card elevated">
+          <div className="goalpay-icon-accent">
+            <FaPlane size={32} color="#4EA8FF" />
+          </div>
           <div className="goalpay-flex">
             <span className="goalpay-hoursleft">
               {goalLoading ? 'Loading…' : goal === null ? 'Set your monthly goal in Settings' : hoursLeft > 0 ? `${hoursLeft.toFixed(1)} hours left to reach your goal of ${goal}!` : 'Goal reached! 🎉'}
             </span>
             <span className="goalpay-divider" />
             <span className="goalpay-estpay">
-              Estimated Pay: <span className="goalpay-payval">${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+              Estimated Pay: <AnimatedPayValue value={estimatedPay} />
             </span>
           </div>
         </div>
@@ -570,4 +573,27 @@ export default function Dashboard() {
       </div>
     </div>
   );
+} 
+
+// AnimatedPayValue component for animated count up
+import { useEffect, useRef, useState } from 'react';
+function AnimatedPayValue({ value }) {
+  const [display, setDisplay] = useState(value);
+  const prev = useRef(value);
+  useEffect(() => {
+    if (prev.current === value) return;
+    let start = prev.current;
+    let end = value;
+    let startTime = null;
+    const duration = 700;
+    function animate(ts) {
+      if (!startTime) startTime = ts;
+      const progress = Math.min((ts - startTime) / duration, 1);
+      setDisplay(start + (end - start) * progress);
+      if (progress < 1) requestAnimationFrame(animate);
+      else prev.current = value;
+    }
+    requestAnimationFrame(animate);
+  }, [value]);
+  return <span className="goalpay-payval">${display.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>;
 } 
