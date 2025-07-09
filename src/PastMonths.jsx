@@ -316,16 +316,17 @@ export default function PastMonths() {
           letterSpacing: 1
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-            <div>
-              {payBlocks.length > 0 ? (
-                <div style={{ fontSize: '1.3rem', marginBottom: 8 }}>
-                  Estimated Pay: ${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                </div>
-              ) : (
-                <div style={{ fontSize: '1.3rem', marginBottom: 8 }}>
+            <div style={{ width: '100%' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 36, fontSize: '1.3rem', fontWeight: 800, marginBottom: 8 }}>
+                {payBlocks.length > 0 && (
+                  <span style={{ color: '#4EA8FF', fontWeight: 800 }}>
+                    Estimated Pay: ${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                  </span>
+                )}
+                <span style={{ color: '#4EA8FF', fontWeight: 800 }}>
                   Total Hours: {totals.total.toFixed(1)}
-                </div>
-              )}
+                </span>
+              </div>
               {schoolPayStructure && (
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
                   School Pay Structure Active{schoolName ? `: ${schoolName}` : ''} ✔️
