@@ -55,9 +55,11 @@ const BulkEntry = () => {
         where('date', '==', bulkDate)
       );
       const existingDocs = await getDocs(existingQuery);
-      
+      let proceed = true;
       if (!existingDocs.empty) {
-        setMessage('Entries already exist for this date. Please use a different date or edit existing entries.');
+        proceed = window.confirm('Entries already exist for this date. Do you want to add more?');
+      }
+      if (!proceed) {
         setIsSubmitting(false);
         return;
       }
