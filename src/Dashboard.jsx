@@ -41,6 +41,29 @@ function getMonthRange(dateStr) {
 
 const MONTHLY_GOAL = 100; // You can adjust this goal as needed
 
+// AnimatedPayValue component for animated count up
+import { useRef } from 'react';
+function AnimatedPayValue({ value }) {
+  const [display, setDisplay] = useState(value);
+  const prev = useRef(value);
+  useEffect(() => {
+    if (prev.current === value) return;
+    let start = prev.current;
+    let end = value;
+    let startTime = null;
+    const duration = 700;
+    function animate(ts) {
+      if (!startTime) startTime = ts;
+      const progress = Math.min((ts - startTime) / duration, 1);
+      setDisplay(start + (end - start) * progress);
+      if (progress < 1) requestAnimationFrame(animate);
+      else prev.current = value;
+    }
+    requestAnimationFrame(animate);
+  }, [value]);
+  return <span className="goalpay-payval">${display.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>;
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [date, setDate] = useState(getToday());
@@ -573,27 +596,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-} 
-
-// AnimatedPayValue component for animated count up
-import { useEffect, useRef, useState } from 'react';
-function AnimatedPayValue({ value }) {
-  const [display, setDisplay] = useState(value);
-  const prev = useRef(value);
-  useEffect(() => {
-    if (prev.current === value) return;
-    let start = prev.current;
-    let end = value;
-    let startTime = null;
-    const duration = 700;
-    function animate(ts) {
-      if (!startTime) startTime = ts;
-      const progress = Math.min((ts - startTime) / duration, 1);
-      setDisplay(start + (end - start) * progress);
-      if (progress < 1) requestAnimationFrame(animate);
-      else prev.current = value;
-    }
-    requestAnimationFrame(animate);
-  }, [value]);
-  return <span className="goalpay-payval">${display.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>;
 } 
