@@ -486,6 +486,23 @@ export default function Dashboard() {
             <Link 
               to="/bulk-entry" 
               className="dashboard-bulk-btn"
+              style={{
+                display: 'block',
+                width: '100%',
+                marginTop: 12,
+                background: '#23272A',
+                color: '#4EA8FF',
+                fontWeight: 600,
+                border: 'none',
+                borderRadius: 12,
+                padding: '1em 2em',
+                textAlign: 'center',
+                textDecoration: 'none',
+                minHeight: '48px',
+                fontSize: '1rem',
+                boxShadow: 'none',
+                transition: 'all 0.2s ease'
+              }}
             >
               Bulk Add
             </Link>

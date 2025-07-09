@@ -214,33 +214,14 @@ export default function Settings() {
       </div>
       <div style={{ marginBottom: 32 }}>
         <h3>Cancellation Pay</h3>
-        <div style={{ marginBottom: 12 }}>
-          <label style={{ marginRight: 16 }}>
-            <input type="radio" name="cancellationPayType" value="none" checked={cancellationPayType === 'none'} onChange={() => setCancellationPayType('none')} /> None
-          </label>
-          <label style={{ marginRight: 16 }}>
-            <input type="radio" name="cancellationPayType" value="threshold" checked={cancellationPayType === 'threshold'} onChange={() => setCancellationPayType('threshold')} />
-            Pay if total hours under threshold
-          </label>
-          <label>
-            <input type="radio" name="cancellationPayType" value="perHour" checked={cancellationPayType === 'perHour'} onChange={() => setCancellationPayType('perHour')} />
-            Pay per cancellation hour
-          </label>
-        </div>
-        {cancellationPayType === 'threshold' && (
-          <div style={{ marginBottom: 8 }}>
-            <input type="number" min="0" placeholder="Hour threshold (e.g. 60)" value={cancellationThreshold} onChange={e => setCancellationThreshold(e.target.value)} style={{ marginRight: 8 }} />
-            <input type="number" min="0" placeholder="Flat amount (e.g. 100)" value={cancellationFlatAmount} onChange={e => setCancellationFlatAmount(e.target.value)} />
-            <div style={{ fontSize: 13, color: '#aaa', marginTop: 4 }}>If your total hours for the month are less than this threshold, you'll receive the flat amount.</div>
-          </div>
-        )}
-        {cancellationPayType === 'perHour' && (
-          <div style={{ marginBottom: 8 }}>
-            <input type="number" min="0" placeholder="Amount per cancellation hour (e.g. 20)" value={cancellationPerHour} onChange={e => setCancellationPerHour(e.target.value)} />
-            <div style={{ fontSize: 13, color: '#aaa', marginTop: 4 }}>You'll receive this amount for each cancellation hour logged.</div>
-          </div>
-        )}
-        <button onClick={handleSaveCancellationPay}>Save Cancellation Pay Settings</button>
+        <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+          Set how you want to handle cancellation pay for the month.
+        </p>
+        <Link to="/settings/cancellation-pay">
+          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
+            Set Cancellation Pay
+          </button>
+        </Link>
       </div>
       <div style={{ marginBottom: 32 }}>
         <h3>Weekly Off Days</h3>

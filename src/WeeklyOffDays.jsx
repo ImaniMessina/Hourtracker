@@ -48,62 +48,68 @@ export default function WeeklyOffDays() {
     );
   };
 
-  if (!user) return <div className="card"><h2>Weekly Off Days</h2><p>Loading...</p></div>;
+  if (!user) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2em' }}>
+      <div className="card" style={{ maxWidth: 540, width: '100%' }}><h2>Weekly Off Days</h2><p>Loading...</p></div>
+    </div>
+  );
 
   return (
-    <div className="card">
-      <h2>Weekly Off Days</h2>
-      <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
-        Select days of the week that should automatically be marked as "OFF" in new months. This will only apply to months from the effective date forward.
-      </p>
-      <div style={{ marginBottom: 16 }}>
-        <label style={{ display: 'block', marginBottom: 8 }}>
-          Effective Date (from when this applies):
-        </label>
-        <input 
-          type="date" 
-          value={offDaysEffectiveDate} 
-          onChange={e => setOffDaysEffectiveDate(e.target.value)} 
-          style={{ padding: 8, borderRadius: 6, border: '1px solid #ddd' }}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label style={{ display: 'block', marginBottom: 8 }}>Select Off Days:</label>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(day => (
-            <label key={day} style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 8, 
-              padding: '8px 12px', 
-              borderRadius: 6, 
-              border: `2px solid ${weeklyOffDays.includes(day) ? '#4EA8FF' : '#ddd'}`,
-              background: weeklyOffDays.includes(day) ? 'rgba(78,168,255,0.1)' : 'transparent',
-              cursor: 'pointer',
-              transition: 'all 0.2s'
-            }}>
-              <input 
-                type="checkbox" 
-                checked={weeklyOffDays.includes(day)} 
-                onChange={() => toggleOffDay(day)} 
-                style={{ transform: 'scale(1.2)' }}
-              />
-              {day}
-            </label>
-          ))}
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2em' }}>
+      <div className="card" style={{ maxWidth: 540, width: '100%' }}>
+        <h2>Weekly Off Days</h2>
+        <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+          Select days of the week that should automatically be marked as "OFF" in new months. This will only apply to months from the effective date forward.
+        </p>
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            Effective Date (from when this applies):
+          </label>
+          <input 
+            type="date" 
+            value={offDaysEffectiveDate} 
+            onChange={e => setOffDaysEffectiveDate(e.target.value)} 
+            style={{ padding: 8, borderRadius: 6, border: '1px solid #ddd' }}
+          />
         </div>
-      </div>
-      <button onClick={handleSaveWeeklyOffDays} style={{ marginRight: 16 }}>
-        Save Weekly Off Days
-      </button>
-      <button onClick={() => navigate('/settings')} style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
-        Back to Settings
-      </button>
-      {(success || error) && (
-        <div style={{ marginTop: 24, color: success ? '#4EA8FF' : 'salmon', fontWeight: 600 }}>
-          {success || error}
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ display: 'block', marginBottom: 8 }}>Select Off Days:</label>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(day => (
+              <label key={day} style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 8, 
+                padding: '8px 12px', 
+                borderRadius: 6, 
+                border: `2px solid ${weeklyOffDays.includes(day) ? '#4EA8FF' : '#ddd'}`,
+                background: weeklyOffDays.includes(day) ? 'rgba(78,168,255,0.1)' : 'transparent',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}>
+                <input 
+                  type="checkbox" 
+                  checked={weeklyOffDays.includes(day)} 
+                  onChange={() => toggleOffDay(day)} 
+                  style={{ transform: 'scale(1.2)' }}
+                />
+                {day}
+              </label>
+            ))}
+          </div>
         </div>
-      )}
+        <button onClick={handleSaveWeeklyOffDays} style={{ marginRight: 16 }}>
+          Save Weekly Off Days
+        </button>
+        <button onClick={() => navigate('/settings')} style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
+          Back to Settings
+        </button>
+        {(success || error) && (
+          <div style={{ marginTop: 24, color: success ? '#4EA8FF' : 'salmon', fontWeight: 600 }}>
+            {success || error}
+          </div>
+        )}
+      </div>
     </div>
   );
 } 
