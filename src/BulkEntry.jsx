@@ -98,31 +98,42 @@ const BulkEntry = () => {
           Add entries for any day. Fill in the details, click Add Entry, and repeat for as many days as you want. Save all at once when done.
         </p>
         <form onSubmit={handleBulkSubmit}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', marginBottom: 24 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <FiCalendar />
-              <input 
-                type="date" 
-                value={current.date} 
-                onChange={e => handleChange('date', e.target.value)} 
-                required 
-                style={{ padding: '0.8em 1em', borderRadius: 8, border: '1px solid #ddd', minHeight: '44px', fontSize: '16px' }}
-              />
-            </div>
-            <input type="number" step="0.1" min="0" placeholder="Flight" value={current.flight} onChange={e => handleChange('flight', e.target.value)} style={{ width: 80 }} disabled={current.off} />
-            <input type="number" step="0.1" min="0" placeholder="Pre/Post" value={current.prepost} onChange={e => handleChange('prepost', e.target.value)} style={{ width: 80 }} disabled={current.off} />
-            <input type="number" step="0.1" min="0" placeholder="Ground" value={current.ground} onChange={e => handleChange('ground', e.target.value)} style={{ width: 80 }} disabled={current.off} />
-            <input type="number" step="1" min="0" placeholder="Cancellations" value={current.cancellations} onChange={e => handleChange('cancellations', e.target.value)} style={{ width: 80 }} disabled={current.off} />
-            <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <input type="checkbox" checked={current.off} onChange={e => handleChange('off', e.target.checked)} /> OFF
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 16,
+            marginBottom: 28,
+            background: 'rgba(35,39,42,0.85)',
+            borderRadius: 14,
+            boxShadow: '0 2px 12px #4EA8FF22',
+            padding: '1.2em 1em',
+            border: '1.5px solid #23272A',
+            maxWidth: 700,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}>
+            <input 
+              type="date" 
+              value={current.date} 
+              onChange={e => handleChange('date', e.target.value)} 
+              required 
+              style={{ minWidth: 120, flex: '1 1 120px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }}
+            />
+            <input type="number" step="0.1" min="0" placeholder="Flight" value={current.flight} onChange={e => handleChange('flight', e.target.value)} style={{ minWidth: 80, flex: '1 1 80px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} disabled={current.off} />
+            <input type="number" step="0.1" min="0" placeholder="Pre/Post" value={current.prepost} onChange={e => handleChange('prepost', e.target.value)} style={{ minWidth: 80, flex: '1 1 80px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} disabled={current.off} />
+            <input type="number" step="0.1" min="0" placeholder="Ground" value={current.ground} onChange={e => handleChange('ground', e.target.value)} style={{ minWidth: 80, flex: '1 1 80px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} disabled={current.off} />
+            <input type="number" step="1" min="0" placeholder="Cancellations" value={current.cancellations} onChange={e => handleChange('cancellations', e.target.value)} style={{ minWidth: 80, flex: '1 1 80px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} disabled={current.off} />
+            <label style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#fff', fontWeight: 500, fontSize: 15 }}>
+              <input type="checkbox" checked={current.off} onChange={e => handleChange('off', e.target.checked)} style={{ transform: 'scale(1.2)', marginRight: 4 }} /> OFF
             </label>
-            <input type="text" placeholder="Notes" value={current.notes} onChange={e => handleChange('notes', e.target.value)} style={{ width: 120 }} />
+            <input type="text" placeholder="Notes" value={current.notes} onChange={e => handleChange('notes', e.target.value)} style={{ minWidth: 120, flex: '2 1 120px', background: 'rgba(24,26,27,0.7)', color: '#fff', border: '1.5px solid #23272A', borderRadius: 8, padding: '0.7em 1em', fontSize: 16 }} />
             <motion.button 
               type="button" 
               onClick={handleAddEntry}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              style={{ background: '#4EA8FF', color: 'white', border: 'none', padding: '0.8em 1.2em', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 16 }}
+              style={{ background: '#4EA8FF', color: 'white', border: 'none', padding: '0.9em 1.5em', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 17, marginLeft: 'auto', minWidth: 130 }}
             >
               <FiPlus /> Add Entry
             </motion.button>
