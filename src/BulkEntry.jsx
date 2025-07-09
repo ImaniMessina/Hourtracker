@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from './firebase';
-import { collection, addDoc, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiPlus, FiCalendar, FiHome, FiSave } from 'react-icons/fi';
+import { FiCalendar, FiHome, FiSave, FiPlus, FiTrash2 } from 'react-icons/fi';
+
+const emptyEntry = (date) => ({
+  date: date || new Date().toISOString().split('T')[0],
+  flight: '',
+  prepost: '',
+  ground: '',
+  cancellations: '',
+  off: false,
+  notes: ''
+});
 
 const BulkEntry = () => {
-  const [bulkEntries, setBulkEntries] = useState([]);
-  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const [entries, setEntries] = useState([]);
+  const [current, setCurrent] = useState(emptyEntry());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
   const [payBlocks, setPayBlocks] = useState([]);
@@ -29,124 +38,42 @@ const BulkEntry = () => {
     return () => unsubscribe();
   }, []);
 
-  // Generate entries for date range
-  const generateEntries = () => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const entries = [];
-    
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      const dateStr = d.toISOString().split('T')[0];
-      entries.push({
-        date: dateStr,
-        flight: '',
-        prepost: '',
-        ground: '',
-        cancellations: '',
-        off: false,
-        notes: ''
-      });
-    }
-    setBulkEntries(entries);
+  const handleAddEntry = () => {
+    if (!current.date) return;
+    setEntries(prev => [...prev, { ...current }]);
+    setCurrent(emptyEntry(current.date));
   };
 
-  // Calculate total hours from bulkEntries
-  const totalHours = bulkEntries.reduce((acc, entry) => {
-    if (!entry.off) {
-      acc += (parseFloat(entry.flight) || 0) + (parseFloat(entry.prepost) || 0) + (parseFloat(entry.ground) || 0);
-    }
-    return acc;
-  }, 0);
+  const handleRemoveEntry = (idx) => {
+    setEntries(prev => prev.filter((_, i) => i !== idx));
+  };
 
-  // Calculate estimated pay (same logic as Dashboard)
-  function calculateEstimatedPay(totalHours, blocks) {
-    if (!Array.isArray(blocks) || blocks.length === 0 || typeof totalHours !== 'number') return 0;
-    let pay = 0;
-    let hoursLeft = totalHours;
-    for (const block of blocks) {
-      if (hoursLeft <= 0) break;
-      const blockStart = block.start;
-      const blockEnd = block.end;
-      const blockHours = Math.max(0, Math.min(hoursLeft, blockEnd - blockStart));
-      if (blockHours > 0) {
-        pay += blockHours * block.rate;
-        hoursLeft -= blockHours;
-      }
-    }
-    return pay;
-  }
-  const estimatedPay = calculateEstimatedPay(totalHours, payBlocks);
-
-  const handleEntryChange = (index, field, value) => {
-    const newEntries = [...bulkEntries];
-    newEntries[index][field] = value;
-    setBulkEntries(newEntries);
+  const handleChange = (field, value) => {
+    setCurrent(cur => ({ ...cur, [field]: value }));
   };
 
   const handleBulkSubmit = async (e) => {
     e.preventDefault();
-    if (!auth.currentUser) {
-      setMessage('Please log in to add entries.');
-      return;
-    }
-
     setIsSubmitting(true);
     setMessage('');
-
     try {
-      const userId = auth.currentUser.uid;
-      const entriesToAdd = bulkEntries.filter(entry => 
-        entry.flight || entry.prepost || entry.ground || entry.cancellations || entry.off || entry.notes
-      );
-
-      if (entriesToAdd.length === 0) {
-        setMessage('Please add at least one entry with some data.');
-        setIsSubmitting(false);
-        return;
+      if (user && entries.length > 0) {
+        await Promise.all(entries.map(entry =>
+          addDoc(collection(db, 'hours'), {
+            uid: user.uid,
+            ...entry,
+            flight: entry.off ? 0 : parseFloat(entry.flight) || 0,
+            prepost: entry.off ? 0 : parseFloat(entry.prepost) || 0,
+            ground: entry.off ? 0 : parseFloat(entry.ground) || 0,
+            cancellations: entry.off ? 0 : parseInt(entry.cancellations) || 0,
+            created: new Date()
+          })
+        ));
+        setShowSuccess(true);
+        setEntries([]);
+        setMessage('Entries saved!');
       }
-
-      // Check for existing entries and warn user
-      const existingDates = entriesToAdd.map(e => e.date);
-      const existingQuery = query(
-        collection(db, 'hours'),
-        where('uid', '==', userId),
-        where('date', 'in', existingDates)
-      );
-      const existingDocs = await getDocs(existingQuery);
-      
-      if (!existingDocs.empty) {
-        const existingDatesList = existingDocs.docs.map(doc => doc.data().date);
-        const proceed = window.confirm(
-          `Entries already exist for: ${existingDatesList.join(', ')}\n\nDo you want to add more entries for these dates?`
-        );
-        if (!proceed) {
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
-      // Add all entries
-      const promises = entriesToAdd.map(entry => 
-        addDoc(collection(db, 'hours'), {
-          uid: userId,
-          date: entry.date,
-          flight: parseFloat(entry.flight) || 0,
-          prepost: parseFloat(entry.prepost) || 0,
-          ground: parseFloat(entry.ground) || 0,
-          cancellations: parseInt(entry.cancellations) || 0,
-          off: entry.off,
-          notes: entry.notes || '',
-          created: new Date()
-        })
-      );
-
-      await Promise.all(promises);
-      
-      setMessage(`Successfully added ${entriesToAdd.length} entries!`);
-      setShowSuccess(true);
-      
     } catch (error) {
-      console.error('Error adding bulk entries:', error);
       setMessage('Error adding entries. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -164,295 +91,102 @@ const BulkEntry = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        style={{ maxWidth: 600, margin: '2em auto' }}
       >
         <h2>Bulk Entry</h2>
-        <p style={{ color: '#666', marginBottom: 20 }}>
-          Add entries for multiple dates. Select a date range and fill in the hours for each day.
+        <p style={{ color: '#888', marginBottom: 20 }}>
+          Add entries for any day. Fill in the details, click Add Entry, and repeat for as many days as you want. Save all at once when done.
         </p>
-        
-        {payBlocks.length > 0 && (
-          <div style={{
-            background: 'rgba(78,168,255,0.12)',
-            color: '#4EA8FF',
-            borderRadius: 16,
-            padding: '18px 0',
-            margin: '0 0 18px 0',
-            fontWeight: 700,
-            fontSize: '1.25rem',
-            textAlign: 'center',
-            boxShadow: '0 2px 12px #4EA8FF22',
-            border: '1.5px solid #4EA8FF44',
-            letterSpacing: 1
-          }}>
-            Estimated Pay: ${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-          </div>
-        )}
-        
         <form onSubmit={handleBulkSubmit}>
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                <FiCalendar />
-                <span>From:</span>
-                <input 
-                  type="date" 
-                  value={startDate} 
-                  onChange={e => setStartDate(e.target.value)} 
-                  required 
-                  style={{ 
-                    padding: '0.8em 1em', 
-                    borderRadius: 8, 
-                    border: '1px solid #ddd',
-                    minHeight: '44px',
-                    fontSize: '16px'
-                  }}
-                />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                <span>To:</span>
-                <input 
-                  type="date" 
-                  value={endDate} 
-                  onChange={e => setEndDate(e.target.value)} 
-                  required 
-                  style={{ 
-                    padding: '0.8em 1em', 
-                    borderRadius: 8, 
-                    border: '1px solid #ddd',
-                    minHeight: '44px',
-                    fontSize: '16px'
-                  }}
-                />
-              </div>
-              <motion.button 
-                type="button" 
-                onClick={generateEntries}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ 
-                  background: '#4EA8FF', 
-                  color: 'white', 
-                  border: 'none', 
-                  padding: '8px 16px', 
-                  borderRadius: 6, 
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8
-                }}
-              >
-                <FiPlus /> Generate Entries
-              </motion.button>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <FiCalendar />
+              <input 
+                type="date" 
+                value={current.date} 
+                onChange={e => handleChange('date', e.target.value)} 
+                required 
+                style={{ padding: '0.8em 1em', borderRadius: 8, border: '1px solid #ddd', minHeight: '44px', fontSize: '16px' }}
+              />
             </div>
+            <input type="number" step="0.1" min="0" placeholder="Flight" value={current.flight} onChange={e => handleChange('flight', e.target.value)} style={{ width: 80 }} disabled={current.off} />
+            <input type="number" step="0.1" min="0" placeholder="Pre/Post" value={current.prepost} onChange={e => handleChange('prepost', e.target.value)} style={{ width: 80 }} disabled={current.off} />
+            <input type="number" step="0.1" min="0" placeholder="Ground" value={current.ground} onChange={e => handleChange('ground', e.target.value)} style={{ width: 80 }} disabled={current.off} />
+            <input type="number" step="1" min="0" placeholder="Cancellations" value={current.cancellations} onChange={e => handleChange('cancellations', e.target.value)} style={{ width: 80 }} disabled={current.off} />
+            <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <input type="checkbox" checked={current.off} onChange={e => handleChange('off', e.target.checked)} /> OFF
+            </label>
+            <input type="text" placeholder="Notes" value={current.notes} onChange={e => handleChange('notes', e.target.value)} style={{ width: 120 }} />
+            <motion.button 
+              type="button" 
+              onClick={handleAddEntry}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              style={{ background: '#4EA8FF', color: 'white', border: 'none', padding: '0.8em 1.2em', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 16 }}
+            >
+              <FiPlus /> Add Entry
+            </motion.button>
           </div>
 
-          {bulkEntries.length > 0 && (
+          {entries.length > 0 && (
             <div style={{ marginBottom: 24 }}>
-              <h3 style={{ marginBottom: 16 }}>Entries ({bulkEntries.length} days)</h3>
-              <div style={{ maxHeight: '400px', overflowY: 'auto', border: '1px solid #ddd', borderRadius: 8 }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead style={{ position: 'sticky', top: 0, background: '#f8f9fa' }}>
-                    <tr>
-                      <th style={{ padding: 12, borderBottom: '1px solid #ddd', textAlign: 'left' }}>Date</th>
-                      <th style={{ padding: 12, borderBottom: '1px solid #ddd', textAlign: 'left' }}>Flight</th>
-                      <th style={{ padding: 12, borderBottom: '1px solid #ddd', textAlign: 'left' }}>Pre/Post</th>
-                      <th style={{ padding: 12, borderBottom: '1px solid #ddd', textAlign: 'left' }}>Ground</th>
-                      <th style={{ padding: 12, borderBottom: '1px solid #ddd', textAlign: 'left' }}>Cancellations</th>
-                      <th style={{ padding: 12, borderBottom: '1px solid #ddd', textAlign: 'left' }}>OFF</th>
-                      <th style={{ padding: 12, borderBottom: '1px solid #ddd', textAlign: 'left' }}>Notes</th>
+              <h3 style={{ marginBottom: 12, color: '#4EA8FF', letterSpacing: 2 }}>Entries ({entries.length})</h3>
+              <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(24,26,27,0.7)', borderRadius: 12 }}>
+                <thead>
+                  <tr style={{ background: 'rgba(35,39,42,0.85)' }}>
+                    <th>Date</th>
+                    <th>Flight</th>
+                    <th>Pre/Post</th>
+                    <th>Ground</th>
+                    <th>Cancellations</th>
+                    <th>OFF</th>
+                    <th>Notes</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {entries.map((entry, idx) => (
+                    <tr key={idx} style={{ borderBottom: '1px solid #23272A' }}>
+                      <td>{entry.date}</td>
+                      <td>{entry.flight}</td>
+                      <td>{entry.prepost}</td>
+                      <td>{entry.ground}</td>
+                      <td>{entry.cancellations}</td>
+                      <td>{entry.off ? '✔️' : ''}</td>
+                      <td>{entry.notes}</td>
+                      <td>
+                        <button type="button" onClick={() => handleRemoveEntry(idx)} style={{ background: 'none', border: 'none', color: '#4EA8FF', cursor: 'pointer', fontSize: 18 }} title="Remove"><FiTrash2 /></button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {bulkEntries.map((entry, idx) => (
-                      <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
-                        <td style={{ padding: 12, fontWeight: 600 }}>{entry.date}</td>
-                        <td style={{ padding: 8 }}>
-                          <input 
-                            type="number" 
-                            step="0.1" 
-                            value={entry.flight} 
-                            onChange={e => handleEntryChange(idx, 'flight', e.target.value)} 
-                            placeholder="0.0" 
-                            min="0" 
-                            disabled={entry.off}
-                            style={{ 
-                              width: '80px', 
-                              padding: '0.6em 0.8em', 
-                              borderRadius: 6, 
-                              border: '1px solid #ddd',
-                              minHeight: '40px',
-                              fontSize: '14px'
-                            }}
-                          />
-                        </td>
-                        <td style={{ padding: 8 }}>
-                          <input 
-                            type="number" 
-                            step="0.1" 
-                            value={entry.prepost} 
-                            onChange={e => handleEntryChange(idx, 'prepost', e.target.value)} 
-                            placeholder="0.0" 
-                            min="0" 
-                            disabled={entry.off}
-                            style={{ 
-                              width: '80px', 
-                              padding: '0.6em 0.8em', 
-                              borderRadius: 6, 
-                              border: '1px solid #ddd',
-                              minHeight: '40px',
-                              fontSize: '14px'
-                            }}
-                          />
-                        </td>
-                        <td style={{ padding: 8 }}>
-                          <input 
-                            type="number" 
-                            step="0.1" 
-                            value={entry.ground} 
-                            onChange={e => handleEntryChange(idx, 'ground', e.target.value)} 
-                            placeholder="0.0" 
-                            min="0" 
-                            disabled={entry.off}
-                            style={{ 
-                              width: '80px', 
-                              padding: '0.6em 0.8em', 
-                              borderRadius: 6, 
-                              border: '1px solid #ddd',
-                              minHeight: '40px',
-                              fontSize: '14px'
-                            }}
-                          />
-                        </td>
-                        <td style={{ padding: 8 }}>
-                          <input 
-                            type="number" 
-                            step="1" 
-                            min="0" 
-                            value={entry.cancellations} 
-                            onChange={e => handleEntryChange(idx, 'cancellations', e.target.value)} 
-                            placeholder="0" 
-                            disabled={entry.off}
-                            style={{ 
-                              width: '80px', 
-                              padding: '0.6em 0.8em', 
-                              borderRadius: 6, 
-                              border: '1px solid #ddd',
-                              minHeight: '40px',
-                              fontSize: '14px'
-                            }}
-                          />
-                        </td>
-                        <td style={{ padding: 8, textAlign: 'center' }}>
-                          <input 
-                            type="checkbox" 
-                            checked={entry.off} 
-                            onChange={e => handleEntryChange(idx, 'off', e.target.checked)} 
-                            style={{ 
-                              transform: 'scale(1.3)',
-                              minHeight: '20px',
-                              minWidth: '20px'
-                            }}
-                          />
-                        </td>
-                        <td style={{ padding: 8 }}>
-                          <input 
-                            type="text" 
-                            value={entry.notes} 
-                            onChange={e => handleEntryChange(idx, 'notes', e.target.value)} 
-                            placeholder="Notes" 
-                            style={{ 
-                              width: '120px', 
-                              padding: '0.6em 0.8em', 
-                              borderRadius: 6, 
-                              border: '1px solid #ddd',
-                              minHeight: '40px',
-                              fontSize: '14px'
-                            }}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
 
           {message && (
-            <div style={{ 
-              padding: 12, 
-              marginBottom: 16, 
-              borderRadius: 6, 
-              backgroundColor: message.includes('Error') ? '#f8d7da' : '#d4edda',
-              color: message.includes('Error') ? '#721c24' : '#155724',
-              border: `1px solid ${message.includes('Error') ? '#f5c6cb' : '#c3e6cb'}`
-            }}>
-              {message}
-            </div>
+            <div style={{ padding: 12, marginBottom: 16, borderRadius: 6, backgroundColor: message.includes('Error') ? '#f8d7da' : '#d4edda', color: message.includes('Error') ? '#721c24' : '#155724', border: `1px solid ${message.includes('Error') ? '#f5c6cb' : '#c3e6cb'}` }}>{message}</div>
           )}
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <motion.button 
               type="submit" 
-              disabled={isSubmitting || bulkEntries.length === 0}
+              disabled={isSubmitting || entries.length === 0}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              style={{ 
-                background: '#28a745', 
-                color: 'white', 
-                border: 'none', 
-                padding: '12px 24px', 
-                borderRadius: 6, 
-                cursor: isSubmitting || bulkEntries.length === 0 ? 'not-allowed' : 'pointer',
-                opacity: isSubmitting || bulkEntries.length === 0 ? 0.7 : 1,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8
-              }}
+              style={{ background: '#28a745', color: 'white', border: 'none', padding: '12px 24px', borderRadius: 6, cursor: isSubmitting || entries.length === 0 ? 'not-allowed' : 'pointer', opacity: isSubmitting || entries.length === 0 ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: 8 }}
             >
               <FiSave />
               {isSubmitting ? 'Saving...' : 'Save All Entries'}
             </motion.button>
-            
-            {showSuccess && (
-              <motion.button 
-                type="button" 
-                onClick={handleGoHome}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ 
-                  background: '#4EA8FF', 
-                  color: 'white', 
-                  border: 'none', 
-                  padding: '12px 24px', 
-                  borderRadius: 6, 
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8
-                }}
-              >
-                <FiHome />
-                Go Home
-              </motion.button>
-            )}
-            
             <motion.button 
               type="button" 
-              onClick={() => navigate('/dashboard')}
+              onClick={handleGoHome}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              style={{ 
-                background: '#6c757d', 
-                color: 'white', 
-                border: 'none', 
-                padding: '12px 24px', 
-                borderRadius: 6, 
-                cursor: 'pointer' 
-              }}
+              style={{ background: '#6c757d', color: 'white', border: 'none', padding: '12px 24px', borderRadius: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
             >
+              <FiHome />
               Cancel
             </motion.button>
           </div>
