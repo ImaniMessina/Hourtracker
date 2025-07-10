@@ -18,9 +18,18 @@ function getDateRange(startYear, startMonth, endYear, endMonth) {
   const start = new Date(startYear, startMonth, 1);
   // End: last day of endMonth
   const end = new Date(endYear, endMonth + 1, 0);
+  
+  // Format dates in local timezone to avoid UTC conversion issues
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
   return {
-    start: start.toISOString().slice(0, 10),
-    end: end.toISOString().slice(0, 10),
+    start: formatDate(start),
+    end: formatDate(end),
   };
 }
 
@@ -35,11 +44,17 @@ export default function PastMonths() {
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
     d.setDate(1);
-    return d.toISOString().slice(0, 10);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   });
   const [endDate, setEndDate] = useState(() => {
     const d = new Date();
-    return d.toISOString().slice(0, 10);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   });
   const [search, setSearch] = useState('');
   const [editingId, setEditingId] = useState(null);
