@@ -59,15 +59,15 @@ const BulkEntry = () => {
     try {
       if (user && entries.length > 0) {
         await Promise.all(entries.map(entry =>
-          addDoc(collection(db, 'hours'), {
+        addDoc(collection(db, 'hours'), {
             uid: user.uid,
             ...entry,
             flight: entry.off ? 0 : parseFloat(entry.flight) || 0,
             prepost: entry.off ? 0 : parseFloat(entry.prepost) || 0,
             ground: entry.off ? 0 : parseFloat(entry.ground) || 0,
-            cancellations: entry.off ? 0 : parseInt(entry.cancellations) || 0,
-            created: new Date()
-          })
+            cancellations: entry.off ? 0 : parseFloat(entry.cancellations) || 0,
+          created: new Date()
+        })
         ));
         setShowSuccess(true);
         setEntries([]);
@@ -104,12 +104,12 @@ const BulkEntry = () => {
               <input type="number" step="0.1" min="0" placeholder="Flight" value={current.flight} onChange={e => handleChange('flight', e.target.value)} className="bulk-input" disabled={current.off} />
               <input type="number" step="0.1" min="0" placeholder="Pre/Post" value={current.prepost} onChange={e => handleChange('prepost', e.target.value)} className="bulk-input" disabled={current.off} />
               <input type="number" step="0.1" min="0" placeholder="Ground" value={current.ground} onChange={e => handleChange('ground', e.target.value)} className="bulk-input" disabled={current.off} />
-              <input type="number" step="1" min="0" placeholder="Cancellations" value={current.cancellations} onChange={e => handleChange('cancellations', e.target.value)} className="bulk-input" disabled={current.off} />
+              <input type="number" step="0.1" min="0" placeholder="Cancellations" value={current.cancellations} onChange={e => handleChange('cancellations', e.target.value)} className="bulk-input" disabled={current.off} />
             </div>
             <div className="bulk-form-row">
               <label className="bulk-off-label">
                 <input type="checkbox" checked={current.off} onChange={e => handleChange('off', e.target.checked)} /> OFF
-              </label>
+            </label>
               <input type="text" placeholder="Notes" value={current.notes} onChange={e => handleChange('notes', e.target.value)} className="bulk-input bulk-notes-input" />
               <motion.button 
                 type="button" 
@@ -125,7 +125,7 @@ const BulkEntry = () => {
 
           {entries.length > 0 && (
             <div className="bulk-table-container">
-              <h3 style={{ marginBottom: 18, color: '#4EA8FF', letterSpacing: 2, paddingLeft: 24, paddingTop: 18, fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 3 }}>Entries ({entries.length})</h3>
+              <h3 style={{ marginBottom: 18, color: '#4EA8FF', letterSpacing: 3, paddingLeft: 24, paddingTop: 18, fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase' }}>Entries ({entries.length})</h3>
               <table className="bulk-table">
                 <thead>
                   <tr style={{ background: 'rgba(35,39,42,0.85)' }}>
@@ -163,7 +163,7 @@ const BulkEntry = () => {
             <div style={{ padding: 12, marginBottom: 16, borderRadius: 6, backgroundColor: message.includes('Error') ? '#f8d7da' : '#d4edda', color: message.includes('Error') ? '#721c24' : '#155724', border: `1px solid ${message.includes('Error') ? '#f5c6cb' : '#c3e6cb'}` }}>{message}</div>
           )}
 
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div className="bulk-action-buttons">
             <motion.button 
               type="submit" 
               disabled={isSubmitting || entries.length === 0}

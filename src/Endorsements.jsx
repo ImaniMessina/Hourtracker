@@ -20,7 +20,8 @@ export default function Endorsements() {
     name: '',
     description: '',
     duration: '',
-    durationUnit: 'days' // 'days', 'months', 'years'
+    durationUnit: 'days', // 'days', 'months', 'years'
+    neverExpires: false
   });
   const [editingTemplate, setEditingTemplate] = useState(null);
 
@@ -98,7 +99,11 @@ export default function Endorsements() {
   }, [user]);
 
   // Calculate expiration date
-  const calculateExpirationDate = (dateGiven, duration, durationUnit) => {
+  const calculateExpirationDate = (dateGiven, duration, durationUnit, neverExpires) => {
+    if (neverExpires) {
+      return null;
+    }
+    
     const date = new Date(dateGiven);
     switch (durationUnit) {
       case 'days':
@@ -116,11 +121,13 @@ export default function Endorsements() {
 
   // Check if endorsement is expired
   const isExpired = (expirationDate) => {
+    if (!expirationDate) return false; // Never expires
     return new Date(expirationDate) < new Date();
   };
 
   // Check if endorsement is expiring soon
   const isExpiringSoon = (expirationDate, daysThreshold = 30) => {
+    if (!expirationDate) return false; // Never expires
     const today = new Date();
     const expiration = new Date(expirationDate);
     const diffTime = expiration - today;
@@ -139,7 +146,8 @@ export default function Endorsements() {
     const expirationDate = calculateExpirationDate(
       endorsement.dateGiven, 
       template.duration, 
-      template.durationUnit
+      template.durationUnit,
+      template.neverExpires
     );
     
     // Student name filter
@@ -185,12 +193,26 @@ export default function Endorsements() {
     }
 
     try {
+      // Validate form data
+      if (!templateForm.name.trim()) {
+        setError('Template name is required.');
+        setLoading(false);
+        return;
+      }
+
+      if (!templateForm.neverExpires && (!templateForm.duration || templateForm.duration <= 0)) {
+        setError('Duration is required and must be greater than 0.');
+        setLoading(false);
+        return;
+      }
+
       const templateData = {
         uid: user.uid,
         name: templateForm.name.trim(),
         description: templateForm.description.trim(),
-        duration: parseInt(templateForm.duration),
-        durationUnit: templateForm.durationUnit,
+        duration: templateForm.neverExpires ? null : parseInt(templateForm.duration),
+        durationUnit: templateForm.neverExpires ? null : templateForm.durationUnit,
+        neverExpires: templateForm.neverExpires,
         created: Timestamp.now()
       };
 
@@ -202,20 +224,29 @@ export default function Endorsements() {
         setSuccess('Template updated!');
       } else {
         console.log('Creating new template');
-        const docRef = await addDoc(collection(db, 'endorsementTemplates'), templateData);
-        console.log('Template created with ID:', docRef.id);
-        
-        // Add to local state immediately for instant feedback
-        const newTemplate = { id: docRef.id, ...templateData };
-        setTemplates(prev => [...prev, newTemplate].sort((a, b) => a.name.localeCompare(b.name)));
-        setSuccess('Template created!');
+        try {
+          const docRef = await addDoc(collection(db, 'endorsementTemplates'), templateData);
+          console.log('Template created with ID:', docRef.id);
+          setSuccess('Template created!');
+        } catch (err) {
+          console.error('Error creating template:', err);
+          setError(`Error creating template: ${err.message}`);
+          setLoading(false);
+          return;
+        }
       }
 
-      setTemplateForm({ name: '', description: '', duration: '', durationUnit: 'days' });
+      setTemplateForm({ name: '', description: '', duration: '', durationUnit: 'days', neverExpires: false });
       setEditingTemplate(null);
     } catch (err) {
       console.error('Error saving template:', err);
-      setError(`Error saving template: ${err.message}`);
+      if (err.code === 'permission-denied') {
+        setError('Permission denied. Please check your Firebase configuration.');
+      } else if (err.code === 'unavailable') {
+        setError('Network error. Please check your internet connection.');
+      } else {
+        setError(`Error saving template: ${err.message}`);
+      }
     }
     setLoading(false);
   };
@@ -225,8 +256,9 @@ export default function Endorsements() {
     setTemplateForm({
       name: template.name,
       description: template.description,
-      duration: template.duration.toString(),
-      durationUnit: template.durationUnit
+      duration: template.duration ? template.duration.toString() : '',
+      durationUnit: template.durationUnit || 'days',
+      neverExpires: template.neverExpires || false
     });
   };
 
@@ -298,13 +330,16 @@ export default function Endorsements() {
         setSuccess('Endorsement updated!');
       } else {
         console.log('Creating new endorsement');
-        const docRef = await addDoc(collection(db, 'endorsements'), endorsementData);
-        console.log('Endorsement created with ID:', docRef.id);
-        
-        // Add to local state immediately for instant feedback
-        const newEndorsement = { id: docRef.id, ...endorsementData };
-        setEndorsements(prev => [newEndorsement, ...prev]);
-        setSuccess('Endorsement recorded!');
+        try {
+          const docRef = await addDoc(collection(db, 'endorsements'), endorsementData);
+          console.log('Endorsement created with ID:', docRef.id);
+          setSuccess('Endorsement recorded!');
+        } catch (err) {
+          console.error('Error creating endorsement:', err);
+          setError(`Error creating endorsement: ${err.message}`);
+          setLoading(false);
+          return;
+        }
       }
 
       setEndorsementForm({
@@ -417,11 +452,13 @@ export default function Endorsements() {
                       onChange={(e) => setTemplateForm({...templateForm, duration: e.target.value})}
                       placeholder="90"
                       min="1"
-                      required
+                      required={!templateForm.neverExpires}
+                      disabled={templateForm.neverExpires}
                     />
                     <select
                       value={templateForm.durationUnit}
                       onChange={(e) => setTemplateForm({...templateForm, durationUnit: e.target.value})}
+                      disabled={templateForm.neverExpires}
                     >
                       <option value="days">Days</option>
                       <option value="months">Months</option>
@@ -439,6 +476,17 @@ export default function Endorsements() {
                   rows="3"
                 />
               </div>
+              
+              <div className="form-group">
+                <label className="never-expires-label">
+                  <input
+                    type="checkbox"
+                    checked={templateForm.neverExpires}
+                    onChange={(e) => setTemplateForm({...templateForm, neverExpires: e.target.checked})}
+                  />
+                  <span className="never-expires-text">This endorsement never expires</span>
+                </label>
+              </div>
               <div className="form-actions">
                 <motion.button
                   type="submit"
@@ -453,7 +501,7 @@ export default function Endorsements() {
                     type="button"
                     onClick={() => {
                       setEditingTemplate(null);
-                      setTemplateForm({ name: '', description: '', duration: '', durationUnit: 'days' });
+                      setTemplateForm({ name: '', description: '', duration: '', durationUnit: 'days', neverExpires: false });
                     }}
                     className="secondary-btn"
                   >
@@ -493,7 +541,11 @@ export default function Endorsements() {
                     </div>
                     <p className="template-description">{template.description}</p>
                     <div className="template-duration">
-                      Duration: {template.duration} {template.durationUnit}
+                      {template.neverExpires ? (
+                        <span className="never-expires-badge">Never Expires</span>
+                      ) : (
+                        `Duration: ${template.duration} ${template.durationUnit}`
+                      )}
                     </div>
                   </div>
                 ))}
@@ -509,10 +561,6 @@ export default function Endorsements() {
           <div className="endorsements-section">
             <h3>{editingEndorsement ? 'Edit Endorsement' : 'Record New Endorsement'}</h3>
             <form onSubmit={handleEndorsementSubmit} className="endorsement-form">
-              {/* Debug info */}
-              <div style={{ background: 'rgba(78, 168, 255, 0.1)', padding: '10px', borderRadius: '8px', marginBottom: '15px', fontSize: '12px' }}>
-                <strong>Debug Info:</strong> Templates loaded: {templates.length} | Selected template: {endorsementForm.templateId} | Loading: {loading.toString()}
-              </div>
               
               <div className="form-row">
                 <div className="form-group">

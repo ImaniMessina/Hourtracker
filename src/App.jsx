@@ -59,11 +59,12 @@ function NavTabs({ onShowNotifications, notificationCount }) {
       </div>
       <div className="nav-tabs-actions">
         <button className="notification-bell-btn" onClick={onShowNotifications} title="Notifications" aria-label="Notifications">
+          {/* Simpler bell SVG, no clapper/line at the bottom */}
           <svg width="22" height="22" viewBox="0 0 24 24" style={{display:'block', color:'#4EA8FF', background:'none', fill:'none', stroke:'#4EA8FF', strokeWidth:2, strokeLinecap:'round', strokeLinejoin:'round'}}>
             <path d="M18 16v-5a6 6 0 1 0-12 0v5l-1.5 2v1h15v-1l-1.5-2z"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            {/* Removed clapper path for a cleaner look */}
           </svg>
-          {notificationCount > 0 && <span className="notification-badge">{notificationCount}</span>}
+          {/* Notification badge removed for rebuild */}
         </button>
         <button className="logout-btn" onClick={handleLogout} title="Log out" aria-label="Log out">
           <svg width="22" height="22" viewBox="0 0 24 24" style={{display:'block', color:'#4EA8FF', background:'none', fill:'none', stroke:'#4EA8FF', strokeWidth:2, strokeLinecap:'round', strokeLinejoin:'round'}}>
