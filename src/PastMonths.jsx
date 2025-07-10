@@ -69,6 +69,7 @@ export default function PastMonths() {
   const [cancellationThreshold, setCancellationThreshold] = useState('');
   const [cancellationFlatAmount, setCancellationFlatAmount] = useState('');
   const [cancellationPerHour, setCancellationPerHour] = useState('');
+  const [cancellationTierMultiplier, setCancellationTierMultiplier] = useState('');
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (u) => {
@@ -84,6 +85,7 @@ export default function PastMonths() {
           setCancellationThreshold(userDoc.data().cancellationThreshold || '');
           setCancellationFlatAmount(userDoc.data().cancellationFlatAmount || '');
           setCancellationPerHour(userDoc.data().cancellationPerHour || '');
+          setCancellationTierMultiplier(userDoc.data().cancellationTierMultiplier || '');
         }
       }
     });
@@ -155,6 +157,18 @@ export default function PastMonths() {
   }
   const estimatedPay = calculateEstimatedPay(totals.total, payBlocks);
 
+  // Function to get tier rate based on total hours
+  function getTierRate(totalHours, blocks) {
+    if (!Array.isArray(blocks) || blocks.length === 0 || typeof totalHours !== 'number') return 0;
+    for (const block of blocks) {
+      if (totalHours >= block.start && totalHours < block.end) {
+        return block.rate;
+      }
+    }
+    // If no block found, return the rate of the last block (for hours beyond the last tier)
+    return blocks[blocks.length - 1]?.rate || 0;
+  }
+
   // Calculate cancellation pay
   let cancellationPay = 0;
   if (cancellationPayType === 'threshold' && cancellationThreshold && cancellationFlatAmount) {
@@ -163,6 +177,9 @@ export default function PastMonths() {
     }
   } else if (cancellationPayType === 'perHour' && cancellationPerHour) {
     cancellationPay = totals.cancellations * Number(cancellationPerHour);
+  } else if (cancellationPayType === 'tierBased') {
+    const tierRate = getTierRate(totals.total, payBlocks);
+    cancellationPay = totals.cancellations * tierRate;
   }
 
   // Edit entry handlers
@@ -371,13 +388,15 @@ export default function PastMonths() {
                 </div>
               )}
             </div>
-            {(cancellationPayType === 'threshold' || cancellationPayType === 'perHour') && cancellationPay > 0 && (
+            {(cancellationPayType === 'threshold' || cancellationPayType === 'perHour' || cancellationPayType === 'tierBased') && cancellationPay > 0 && (
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '1.1rem' }}>
                   Cancellation Pay: ${cancellationPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </div>
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-                  {cancellationPayType === 'threshold' ? 'Threshold Bonus' : 'Per Hour Rate'}
+                  {cancellationPayType === 'threshold' ? 'Threshold Bonus' : 
+                   cancellationPayType === 'perHour' ? 'Per Hour Rate' : 
+                   'Tier-Based Rate'}
                 </div>
               </div>
             )}
