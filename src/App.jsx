@@ -23,6 +23,69 @@ import { FiLogOut } from 'react-icons/fi';
 import { FaBell } from 'react-icons/fa';
 import { FaBeer } from 'react-icons/fa';
 
+// Version check component
+function UpdateNotification() {
+  const [showUpdate, setShowUpdate] = useState(false);
+
+  useEffect(() => {
+    // Check for service worker updates
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        setShowUpdate(true);
+      });
+    }
+  }, []);
+
+  if (!showUpdate) return null;
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      background: '#4EA8FF',
+      color: 'white',
+      padding: '12px',
+      textAlign: 'center',
+      zIndex: 9999,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: '16px'
+    }}>
+      <span>🔄 New version available!</span>
+      <button 
+        onClick={() => window.location.reload()}
+        style={{
+          background: 'white',
+          color: '#4EA8FF',
+          border: 'none',
+          padding: '8px 16px',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          fontWeight: 'bold'
+        }}
+      >
+        Update Now
+      </button>
+      <button 
+        onClick={() => setShowUpdate(false)}
+        style={{
+          background: 'transparent',
+          color: 'white',
+          border: '1px solid white',
+          padding: '8px 16px',
+          borderRadius: '6px',
+          cursor: 'pointer'
+        }}
+      >
+        Later
+      </button>
+    </div>
+  );
+}
+
 function NavTabs({ onShowNotifications, notificationCount }) {
   const location = useLocation();
   const [user, setUser] = useState(null);
@@ -105,6 +168,7 @@ function App() {
 
   return (
     <Router>
+      <UpdateNotification />
       <NavTabs
         onShowNotifications={() => setShowNotifications(true)}
         notificationCount={notifications.length}
