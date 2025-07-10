@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from './firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { FiPlus, FiSave, FiArrowLeft, FiTrash2 } from 'react-icons/fi';
 
 export default function PayStructure() {
   const [user, setUser] = useState(null);
@@ -86,17 +87,17 @@ export default function PayStructure() {
               <td><input type="number" value={b.start} onChange={e => handlePayBlockChange(i, 'start', Number(e.target.value))} style={{ width: 60 }} /></td>
               <td><input type="number" value={b.end} onChange={e => handlePayBlockChange(i, 'end', Number(e.target.value))} style={{ width: 60 }} /></td>
               <td><input type="number" value={b.rate} onChange={e => handlePayBlockChange(i, 'rate', Number(e.target.value))} style={{ width: 60 }} /></td>
-              <td><button type="button" onClick={() => removePayBlock(i)} style={{ background: 'none', color: '#888', border: 'none', fontSize: 18, cursor: 'pointer' }} disabled={payBlocks.length === 1}>×</button></td>
+              <td><button type="button" onClick={() => removePayBlock(i)} style={{ background: 'none', color: '#888', border: 'none', fontSize: 18, cursor: 'pointer' }} disabled={payBlocks.length === 1}><FiTrash2 /></button></td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button type="button" onClick={addPayBlock} style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.5em 1em', marginBottom: 12, cursor: 'pointer' }}>Add Block</button>
+      <button type="button" onClick={addPayBlock} style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.5em 1em', marginBottom: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiPlus style={{marginRight:4}} />Add Block</button>
       <br />
-      <button onClick={handleSavePayBlocks} disabled={loading}>{loading ? 'Saving...' : 'Save Pay Structure'}</button>
+      <button onClick={handleSavePayBlocks} disabled={loading}><FiSave style={{marginRight:8}} />{loading ? 'Saving...' : 'Save Pay Structure'}</button>
       {success && <div style={{ color: '#4EA8FF', marginTop: 12 }}>{success}</div>}
       {error && <div style={{ color: 'salmon', marginTop: 12 }}>{error}</div>}
-      <button onClick={() => navigate('/settings')} style={{ marginTop: 24, background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>Back to Settings</button>
+      <button onClick={() => navigate('/settings')} style={{ marginTop: 24, background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiArrowLeft style={{marginRight:4}} />Back to Settings</button>
     </div>
   );
 } 

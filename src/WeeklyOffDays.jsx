@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from './firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { FiSave, FiArrowLeft } from 'react-icons/fi';
 
 export default function WeeklyOffDays() {
   const [user, setUser] = useState(null);
@@ -98,12 +99,8 @@ export default function WeeklyOffDays() {
             ))}
           </div>
         </div>
-        <button onClick={handleSaveWeeklyOffDays} style={{ marginRight: 16 }}>
-          Save Weekly Off Days
-        </button>
-        <button onClick={() => navigate('/settings')} style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
-          Back to Settings
-        </button>
+        <button onClick={handleSaveWeeklyOffDays} style={{ marginRight: 16 }}><FiSave style={{marginRight:8}} />Save Weekly Off Days</button>
+        <button onClick={() => navigate('/settings')} style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiArrowLeft style={{marginRight:4}} />Back to Settings</button>
         {(success || error) && (
           <div style={{ marginTop: 24, color: success ? '#4EA8FF' : 'salmon', fontWeight: 600 }}>
             {success || error}

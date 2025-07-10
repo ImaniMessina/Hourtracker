@@ -3,7 +3,7 @@ import { auth, db } from './firebase';
 import { collection, query, where, getDocs, orderBy, doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { FiTrash2 } from 'react-icons/fi';
+import { FiTrash2, FiDownload } from 'react-icons/fi';
 import EditEntryModal from './EditEntryModal';
 
 const months = [
@@ -296,8 +296,8 @@ export default function PastMonths() {
           onChange={e => setSearch(e.target.value)}
           style={{ minWidth: 200, marginLeft: 16 }}
         />
-        <button onClick={handleDownloadPDF} disabled={filteredEntries.length === 0 || loading} style={{ marginLeft: 16 }}>
-          Download PDF
+        <button onClick={handleDownloadPDF} disabled={filteredEntries.length === 0 || loading} style={{ marginLeft: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <FiDownload style={{marginRight:4}} />Download PDF
         </button>
       </div>
 

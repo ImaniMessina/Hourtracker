@@ -4,7 +4,7 @@ import { updateProfile, updatePassword } from 'firebase/auth';
 import { doc, setDoc, getDoc, collection, addDoc, Timestamp } from 'firebase/firestore';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Link } from 'react-router-dom';
-import { FiUploadCloud } from 'react-icons/fi';
+import { FiUploadCloud, FiSave, FiArrowLeft, FiSettings, FiDollarSign, FiCalendar } from 'react-icons/fi';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import Tesseract from 'tesseract.js';
 import ImportReviewModal from './ImportReviewModal';
@@ -358,17 +358,17 @@ export default function Settings() {
         <h3>Update Info</h3>
         <input type="text" placeholder="Name" value={displayName} onChange={e => setDisplayName(e.target.value)} style={{ marginBottom: 12, width: '100%' }} />
         <input type="email" placeholder="Email" value={email} disabled style={{ marginBottom: 12, width: '100%', opacity: 0.7 }} />
-        <button onClick={handleSaveInfo}>Save Info</button>
+        <button onClick={handleSaveInfo}><FiSave style={{marginRight:8}} />Save Info</button>
       </div>
       <div style={{ marginBottom: 32 }}>
         <h3>Change Password</h3>
         <input type="password" placeholder="New Password" value={password} onChange={e => setPassword(e.target.value)} style={{ marginBottom: 12, width: '100%' }} />
-        <button onClick={handleChangePassword} disabled={!password}>Change Password</button>
+        <button onClick={handleChangePassword} disabled={!password}><FiSave style={{marginRight:8}} />Change Password</button>
       </div>
       <div style={{ marginBottom: 32 }}>
         <h3>Monthly Goal</h3>
         <input type="number" placeholder="Monthly Hours Goal" value={goal} onChange={e => setGoal(e.target.value)} style={{ marginBottom: 12, width: '100%' }} disabled={goalLoading} />
-        <button onClick={handleSetGoal} disabled={goalLoading}>Set Goal</button>
+        <button onClick={handleSetGoal} disabled={goalLoading}><FiSave style={{marginRight:8}} />Set Goal</button>
       </div>
       <div style={{ marginBottom: 32 }}>
         <h3>Cancellation Pay</h3>
@@ -376,9 +376,7 @@ export default function Settings() {
           Set how you want to handle cancellation pay for the month.
         </p>
         <Link to="/settings/cancellation-pay">
-          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
-            Set Cancellation Pay
-          </button>
+          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiDollarSign style={{marginRight:4}} />Set Cancellation Pay</button>
         </Link>
       </div>
       <div style={{ marginBottom: 32 }}>
@@ -387,16 +385,12 @@ export default function Settings() {
           Set days of the week that should automatically be marked as "OFF" in new months.
         </p>
         <Link to="/settings/weekly-off-days">
-          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
-            Set Weekly Off Days
-          </button>
+          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiCalendar style={{marginRight:4}} />Set Weekly Off Days</button>
         </Link>
       </div>
       <div style={{ marginBottom: 32 }}>
         <Link to="/pay-structure">
-          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer' }}>
-            Set Pay Structure
-          </button>
+          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiSettings style={{marginRight:4}} />Set Pay Structure</button>
         </Link>
       </div>
       {(success || error) && (

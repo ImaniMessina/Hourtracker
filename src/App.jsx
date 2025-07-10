@@ -17,9 +17,13 @@ import PayStructure from './PayStructure';
 import BulkEntry from './BulkEntry';
 import WeeklyOffDays from './WeeklyOffDays';
 import CancellationPay from './CancellationPay';
+import Endorsements from './Endorsements';
 import { auth } from './firebase';
+import { FiLogOut } from 'react-icons/fi';
+import { FaBell } from 'react-icons/fa';
+import { FaBeer } from 'react-icons/fa';
 
-function NavTabs() {
+function NavTabs({ onShowNotifications, notificationCount }) {
   const location = useLocation();
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -31,19 +35,44 @@ function NavTabs() {
   const tabs = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/past-months', label: 'Past Months' },
+    { path: '/endorsements', label: 'Endorsements' },
     { path: '/settings', label: 'Settings' },
   ];
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    window.location.href = '/login';
+  };
+
   return (
-    <nav className="nav-tabs">
-      {tabs.map(tab => (
-        <Link
-          key={tab.path}
-          to={tab.path}
-          className={location.pathname.startsWith(tab.path) ? 'active' : ''}
-        >
-          {tab.label}
-        </Link>
-      ))}
+    <nav className="nav-tabs nav-tabs-with-logout">
+      <div className="nav-tabs-list">
+        {tabs.map(tab => (
+          <Link
+            key={tab.path}
+            to={tab.path}
+            className={location.pathname.startsWith(tab.path) ? 'active' : ''}
+          >
+            {tab.label}
+          </Link>
+        ))}
+      </div>
+      <div className="nav-tabs-actions">
+        <button className="notification-bell-btn" onClick={onShowNotifications} title="Notifications" aria-label="Notifications">
+          <svg width="22" height="22" viewBox="0 0 24 24" style={{display:'block', color:'#4EA8FF', background:'none', fill:'none', stroke:'#4EA8FF', strokeWidth:2, strokeLinecap:'round', strokeLinejoin:'round'}}>
+            <path d="M18 16v-5a6 6 0 1 0-12 0v5l-1.5 2v1h15v-1l-1.5-2z"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          {notificationCount > 0 && <span className="notification-badge">{notificationCount}</span>}
+        </button>
+        <button className="logout-btn" onClick={handleLogout} title="Log out" aria-label="Log out">
+          <svg width="22" height="22" viewBox="0 0 24 24" style={{display:'block', color:'#4EA8FF', background:'none', fill:'none', stroke:'#4EA8FF', strokeWidth:2, strokeLinecap:'round', strokeLinejoin:'round'}}>
+            <path d="M10 17l5-5-5-5"/>
+            <path d="M15 12H3"/>
+            <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+          </svg>
+        </button>
+      </div>
     </nav>
   );
 }
@@ -63,15 +92,42 @@ function AppRoutes() {
         <Route path="/settings/weekly-off-days" element={<WeeklyOffDays />} />
         <Route path="/settings/cancellation-pay" element={<CancellationPay />} />
         <Route path="/pay-structure" element={<PayStructure />} />
+        <Route path="/endorsements" element={<Endorsements />} />
       </Routes>
     </>
   );
 }
 
 function App() {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
   return (
     <Router>
-      <AppRoutes />
+      <NavTabs
+        onShowNotifications={() => setShowNotifications(true)}
+        notificationCount={notifications.length}
+      />
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={
+          <Dashboard
+            showNotifications={showNotifications}
+            setShowNotifications={setShowNotifications}
+            notifications={notifications}
+            setNotifications={setNotifications}
+          />
+        } />
+        <Route path="/bulk-entry" element={<BulkEntry />} />
+        <Route path="/past-months" element={<PastMonths />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings/weekly-off-days" element={<WeeklyOffDays />} />
+        <Route path="/settings/cancellation-pay" element={<CancellationPay />} />
+        <Route path="/pay-structure" element={<PayStructure />} />
+        <Route path="/endorsements" element={<Endorsements />} />
+      </Routes>
     </Router>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FiCheck, FiX } from 'react-icons/fi';
 
 export default function ImportReviewModal({ open, onClose, onConfirm, entries: initialEntries, loading }) {
   const [entries, setEntries] = useState(initialEntries || []);
@@ -65,8 +66,8 @@ export default function ImportReviewModal({ open, onClose, onConfirm, entries: i
             </table>
           </div>
           <div className="modal-actions">
-            <button type="button" className="modal-save" onClick={handleConfirm} disabled={loading}>{loading ? 'Importing...' : 'Confirm Import'}</button>
-            <button type="button" className="modal-cancel" onClick={onClose} disabled={loading}>Cancel</button>
+            <button type="button" className="modal-save" onClick={handleConfirm} disabled={loading}><FiCheck style={{marginRight:8}} />{loading ? 'Importing...' : 'Confirm Import'}</button>
+            <button type="button" className="modal-cancel" onClick={onClose} disabled={loading}><FiX style={{marginRight:8}} />Cancel</button>
           </div>
         </motion.div>
       </motion.div>
