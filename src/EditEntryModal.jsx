@@ -51,7 +51,7 @@ export default function EditEntryModal({ open, onClose, onSave, entry, loading }
                 <input type="number" step="0.1" min="0" value={form.ground || ''} onChange={e => handleChange('ground', e.target.value)} disabled={form.off} />
               </label>
               <label>Cancellations
-                <input type="number" step="1" min="0" value={form.cancellations || ''} onChange={e => handleChange('cancellations', e.target.value)} disabled={form.off} />
+                <input type="number" step="0.1" min="0" value={form.cancellations || ''} onChange={e => handleChange('cancellations', e.target.value)} disabled={form.off} />
               </label>
             </div>
             <div className="modal-form-row">

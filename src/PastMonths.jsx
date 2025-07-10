@@ -186,30 +186,48 @@ export default function PastMonths() {
   };
   const handleModalSave = async (form) => {
     setModalLoading(true);
-    const ref = doc(db, 'hours', editingId);
-    await updateDoc(ref, {
-      date: form.date,
-      flight: parseFloat(form.flight) || 0,
-      prepost: parseFloat(form.prepost) || 0,
-      ground: parseFloat(form.ground) || 0,
-      cancellations: parseInt(form.cancellations) || 0,
-      off: !!form.off,
-      notes: form.notes || '',
-    });
-    setModalLoading(false);
-    setModalOpen(false);
-    setEditingId(null);
-    setEditData({ date: '', flight: '', prepost: '', ground: '', cancellations: '', off: false, notes: '' });
-    // Refresh entries
-    const q = query(
-      collection(db, 'hours'),
-      where('uid', '==', user.uid),
-      where('date', '>=', startDate),
-      where('date', '<=', endDate),
-      orderBy('date', 'asc')
-    );
-    const snap = await getDocs(q);
-    setEntries(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    try {
+      console.log('Saving form data:', form);
+      console.log('Editing ID:', editingId);
+      
+      const ref = doc(db, 'hours', editingId);
+      const updateData = {
+        date: form.date,
+        flight: parseFloat(form.flight) || 0,
+        prepost: parseFloat(form.prepost) || 0,
+        ground: parseFloat(form.ground) || 0,
+        cancellations: parseFloat(form.cancellations) || 0, // Changed to parseFloat for decimal support
+        off: !!form.off,
+        notes: form.notes || '',
+      };
+      
+      console.log('Update data:', updateData);
+      
+      await updateDoc(ref, updateData);
+      console.log('Document updated successfully');
+      
+      setModalLoading(false);
+      setModalOpen(false);
+      setEditingId(null);
+      setEditData({ date: '', flight: '', prepost: '', ground: '', cancellations: '', off: false, notes: '' });
+      
+      // Refresh entries
+      const q = query(
+        collection(db, 'hours'),
+        where('uid', '==', user.uid),
+        where('date', '>=', startDate),
+        where('date', '<=', endDate),
+        orderBy('date', 'asc')
+      );
+      const snap = await getDocs(q);
+      setEntries(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      console.log('Entries refreshed');
+      
+    } catch (error) {
+      console.error('Error saving entry:', error);
+      setModalLoading(false);
+      alert(`Error saving entry: ${error.message}`);
+    }
   };
 
   // Delete entry handlers

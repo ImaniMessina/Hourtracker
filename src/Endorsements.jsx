@@ -163,10 +163,16 @@ export default function Endorsements() {
     // Status filter
     switch (endorsementFilter) {
       case 'active':
+        // Never expires templates are always active
+        if (template.neverExpires) return true;
         return !isExpired(expirationDate);
       case 'expired':
+        // Never expires templates are never expired
+        if (template.neverExpires) return false;
         return isExpired(expirationDate);
       case 'expiring-soon':
+        // Never expires templates are never expiring soon
+        if (template.neverExpires) return false;
         const daysThreshold = expiringDaysFilter ? parseInt(expiringDaysFilter) : 30;
         return isExpiringSoon(expirationDate, daysThreshold);
       default:
@@ -740,8 +746,53 @@ export default function Endorsements() {
                     {filteredEndorsements.map(endorsement => {
                       const template = templates.find(t => t.id === endorsement.templateId);
                       const expirationDate = template 
-                        ? calculateExpirationDate(endorsement.dateGiven, template.duration, template.durationUnit)
+                        ? calculateExpirationDate(endorsement.dateGiven, template.duration, template.durationUnit, template.neverExpires)
                         : null;
+                      
+                      // Handle never expires templates
+                      if (template && template.neverExpires) {
+                        return (
+                          <tr key={endorsement.id}>
+                            <td>
+                              <div className="student-info">
+                                <div className="student-name">{endorsement.studentName}</div>
+                                {endorsement.studentId && (
+                                  <div className="student-id">ID: {endorsement.studentId}</div>
+                                )}
+                              </div>
+                            </td>
+                            <td>{template.name}</td>
+                            <td>{endorsement.dateGiven}</td>
+                            <td>Never Expires</td>
+                            <td>
+                              <span className="status-badge active">
+                                <FaCheckCircle />
+                                Active
+                              </span>
+                            </td>
+                            <td>
+                              <div className="action-buttons">
+                                <button
+                                  onClick={() => handleEditEndorsement(endorsement)}
+                                  className="icon-btn small"
+                                  title="Edit endorsement"
+                                >
+                                  <FaEdit />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteEndorsement(endorsement.id)}
+                                  className="icon-btn small danger"
+                                  title="Delete endorsement"
+                                >
+                                  <FaTrash />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      }
+                      
+                      // Handle regular templates with expiration
                       const expired = expirationDate ? isExpired(expirationDate) : false;
                       const expiringSoon = expirationDate ? isExpiringSoon(expirationDate, expiringDaysFilter ? parseInt(expiringDaysFilter) : 30) : false;
                       
