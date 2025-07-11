@@ -305,111 +305,7 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
   const monthYear = getMonthYear(date);
   const progress = goal ? Math.min((totals.total / goal) * 100, 100) : 0;
   const hoursLeft = goal !== null ? Math.max(goal - totals.total, 0) : null;
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 480;
 
-  if (isMobile) {
-    return (
-      <div className="dashboard-immersive-bg" style={{ background: 'none', minHeight: '100vh', width: '100vw', overflowX: 'hidden' }}>
-        <div className="card" style={{ width: '100vw', maxWidth: '100vw', borderRadius: 0, margin: 0, padding: '1.1em 0.5em 0.5em 0.5em', boxShadow: 'none', background: 'rgba(35,39,42,0.98)' }}>
-          <div style={{ marginBottom: '1.1em' }}>
-            <div className="dashboard-monthyear" style={{ fontSize: '1.2rem', fontWeight: 700, color: '#4EA8FF', letterSpacing: 1, marginBottom: 8 }}>{monthYear}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 8 }}>
-              <div className="dashboard-progress-circle" style={{ width: 90, height: 90, margin: 0 }}>
-                <CircularProgressbar
-                  value={goal ? progress : 0}
-                  maxValue={100}
-                  text={`${totals.total.toFixed(1)}`}
-                  styles={buildStyles({
-                    pathColor: '#4EA8FF',
-                    trailColor: '#23272A',
-                    textColor: '#fff',
-                    textSize: '1.4rem',
-                    pathTransitionDuration: 0.7,
-                    strokeLinecap: 'round',
-                    trailWidth: 6,
-                    pathWidth: 8,
-                    backgroundColor: 'rgba(24,26,27,0.7)',
-                    fontWeight: 700,
-                    fontFamily: 'Montserrat, Arial, sans-serif',
-                  })}
-                />
-              </div>
-              <div className="dashboard-total-label" style={{ fontSize: '1.05rem', color: '#b8d8ff', opacity: 0.8, marginLeft: 2 }}>TOTAL HOURS</div>
-            </div>
-            <div className="dashboard-goalpay-card elevated" style={{ maxWidth: '100vw', padding: '1em 0.5em', borderRadius: 14, margin: '0.7em 0', boxShadow: '0 2px 12px #4EA8FF22' }}>
-              <div className="goalpay-flex" style={{ flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>
-                <span className="goalpay-hoursleft" style={{ fontSize: '1.05rem', color: '#fff', opacity: 0.95 }}>
-                  {goalLoading ? 'Loading…' : goal === null ? 'Set your monthly goal in Settings' : hoursLeft > 0 ? `${hoursLeft.toFixed(1)} hours left to reach your goal of ${goal}!` : 'Goal reached! 🎉'}
-                </span>
-                <span className="goalpay-estpay" style={{ fontSize: '1.05rem', color: '#fff', opacity: 0.95 }}>
-                  Estimated Pay: <span className="goalpay-payval">${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="dashboard-form" style={{ width: '100vw', maxWidth: '100vw', padding: '1.1em 0.5em', borderRadius: 14, marginBottom: '1.1em', boxShadow: '0 2px 12px #4EA8FF22' }}>
-            <FlightEntryForm
-              values={{ date, flight, prepost, ground, cancellations, off, notes }}
-              onChange={(field, value) => {
-                if (field === 'date') setDate(value);
-                else if (field === 'flight') setFlight(value);
-                else if (field === 'prepost') setPrepost(value);
-                else if (field === 'ground') setGround(value);
-                else if (field === 'cancellations') setCancellations(value);
-                else if (field === 'off') setOff(value);
-                else if (field === 'notes') setNotes(value);
-              }}
-              onSubmit={handleSubmit}
-              loading={loading}
-            />
-          </div>
-          <div className="dashboard-table-section" style={{ width: '100vw', maxWidth: '100vw', padding: '1.1em 0.5em', borderRadius: 14, boxShadow: '0 2px 12px #4EA8FF22', overflowX: 'auto' }}>
-            <h3 style={{ fontSize: '1.1rem', marginBottom: 8, color: '#4EA8FF', textAlign: 'left', letterSpacing: 1 }}>Entries This Month</h3>
-            <table style={{ minWidth: 500, fontSize: '0.92rem' }}>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Flight</th>
-                  <th>Pre/Post</th>
-                  <th>Ground</th>
-                  <th>Notes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {fetching ? (
-                  <tr><td colSpan="5" style={{ textAlign: 'center', opacity: 0.7 }}>Loading...</td></tr>
-                ) : entries.length === 0 ? (
-                  <tr><td colSpan="5" style={{ textAlign: 'center', opacity: 0.7 }}>No entries yet.</td></tr>
-                ) : (
-                  entries.map(e => (
-                    <tr key={e.id}>
-                      <td>{e.date}</td>
-                      <td>{e.flight}</td>
-                      <td>{e.prepost}</td>
-                      <td>{e.ground}</td>
-                      <td style={{ maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={e.notes || ''}>
-                        {e.notes || ''}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td style={{ fontWeight: 700 }}>Total</td>
-                  <td>{totals.flight.toFixed(1)}</td>
-                  <td>{totals.prepost.toFixed(1)}</td>
-                  <td>{totals.ground.toFixed(1)}</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  // Desktop layout (unchanged)
   return (
     <div className="dashboard-immersive-bg">
       {/* Top bar with month, total hours, and logout icon */}
@@ -493,6 +389,7 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
             )}
           </div>
         )}
+
         <div className="dashboard-topbar" style={{ position: 'relative' }}>
           <div className="dashboard-heading-wrap">
             <div className="dashboard-monthyear">{monthYear}</div>

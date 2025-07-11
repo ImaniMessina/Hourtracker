@@ -4,7 +4,7 @@ import { updateProfile, updatePassword } from 'firebase/auth';
 import { doc, setDoc, getDoc, collection, addDoc, Timestamp } from 'firebase/firestore';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Link } from 'react-router-dom';
-import { FiUploadCloud, FiSave, FiArrowLeft, FiSettings, FiDollarSign, FiCalendar } from 'react-icons/fi';
+import { FiArrowLeft, FiSettings, FiDollarSign, FiCalendar, FiUser, FiEdit, FiLock, FiTarget, FiLifeBuoy } from 'react-icons/fi';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import Tesseract from 'tesseract.js';
 import ImportReviewModal from './ImportReviewModal';
@@ -297,107 +297,99 @@ export default function Settings() {
   if (!user) return <div className="card"><h2>Settings</h2><p>Loading...</p></div>;
 
   return (
-    <div className="card">
-      <h2>Settings</h2>
-      <div style={{ marginBottom: 40, padding: '2em 0', borderBottom: '1.5px solid #23272a33' }}>
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <FiUploadCloud style={{ color: '#4EA8FF', fontSize: 28 }} />
-          Import Past Months
-          <span style={{ background: '#23272a', color: '#4EA8FF', fontWeight: 700, fontSize: '0.85em', borderRadius: 8, padding: '2px 10px', marginLeft: 8, letterSpacing: 1 }}>BETA</span>
-        </h3>
-        <p style={{ color: '#b0c4d6', margin: '8px 0 18px 0', fontSize: '1.05em' }}>
-          Upload a PDF or screenshot of your old logbook/monthly summary. We'll extract the data and let you review it before importing.
-        </p>
-        <input
-          type="file"
-          accept=".pdf,image/*"
-          onChange={async e => {
-            const file = e.target.files[0] || null;
-            setImportFile(file);
-            setImportPreview(null);
-            setImportError('');
-            if (file) await handleImportFile(file);
-          }}
-          style={{ marginBottom: 16 }}
-        />
-        {importFile && (
-          <div style={{ marginTop: 10, color: '#4EA8FF', fontWeight: 500 }}>
-            Selected: {importFile.name}
-            <button style={{ marginLeft: 18, color: '#fff', background: '#23272a', border: 'none', borderRadius: 8, padding: '2px 10px', cursor: 'pointer' }} onClick={() => { setImportFile(null); setImportPreview(null); }}>Remove</button>
+    <div className="settings-container" style={{ maxWidth: 900, margin: '2em auto', padding: '2.5em 1.5em' }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+        gap: 32,
+        alignItems: 'stretch',
+      }}>
+        {/* Profile Picture */}
+        <div className="card" style={{ minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2em', borderRadius: 16, boxShadow: '0 2px 16px #4EA8FF22', background: 'rgba(35,39,42,0.97)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 22 }}><FiUser style={{ color: '#4EA8FF', fontSize: 28 }} />Profile Picture</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 12, marginTop: 12 }}>
+            <img src={photoURL || 'https://ui-avatars.com/api/?name=User'} alt="Profile" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: '2px solid #4EA8FF' }} />
+            <input type="file" accept="image/*" onChange={handlePhotoUpload} disabled={uploading} />
+            {uploading && <span style={{ color: '#4EA8FF' }}>Uploading...</span>}
           </div>
-        )}
-        {importError && <div style={{ color: '#ff4e4e', marginTop: 8 }}>{importError}</div>}
-        {importPreview && (
-          <div style={{ marginTop: 18, background: '#181a28', borderRadius: 12, padding: 18, color: '#fff' }}>
-            <h4>Extracted Text (debug)</h4>
-            <pre style={{ whiteSpace: 'pre-wrap', fontSize: '1em' }}>{importPreview}</pre>
-          </div>
-        )}
-        {importPreview && parseImportedText(importPreview).length === 0 && (
-          <div style={{ color: '#ffb84e', marginTop: 12, fontWeight: 500 }}>
-            No entries found in the extracted text. Please check the format or share the text with your developer to improve parsing.
-          </div>
-        )}
-      </div>
-      <ImportReviewModal
-        open={importModalOpen}
-        onClose={() => setImportModalOpen(false)}
-        onConfirm={handleImportConfirm}
-        entries={importEntries}
-        loading={importing}
-      />
-      <div style={{ marginBottom: 32 }}>
-        <h3>Profile Picture</h3>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 12 }}>
-          <img src={photoURL || 'https://ui-avatars.com/api/?name=User'} alt="Profile" style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: '2px solid #4EA8FF' }} />
-          <input type="file" accept="image/*" onChange={handlePhotoUpload} disabled={uploading} />
+          {success && <div style={{ color: '#4EA8FF', marginTop: 12 }}>{success}</div>}
+          {error && <div style={{ color: 'salmon', marginTop: 12 }}>{error}</div>}
         </div>
-        {uploading && <span style={{ color: '#4EA8FF' }}>Uploading...</span>}
-      </div>
-      <div style={{ marginBottom: 32 }}>
-        <h3>Update Info</h3>
-        <input type="text" placeholder="Name" value={displayName} onChange={e => setDisplayName(e.target.value)} style={{ marginBottom: 12, width: '100%' }} />
-        <input type="email" placeholder="Email" value={email} disabled style={{ marginBottom: 12, width: '100%', opacity: 0.7 }} />
-        <button onClick={handleSaveInfo}><FiSave style={{marginRight:8}} />Save Info</button>
-      </div>
-      <div style={{ marginBottom: 32 }}>
-        <h3>Change Password</h3>
-        <input type="password" placeholder="New Password" value={password} onChange={e => setPassword(e.target.value)} style={{ marginBottom: 12, width: '100%' }} />
-        <button onClick={handleChangePassword} disabled={!password}><FiSave style={{marginRight:8}} />Change Password</button>
-      </div>
-      <div style={{ marginBottom: 32 }}>
-        <h3>Monthly Goal</h3>
-        <input type="number" placeholder="Monthly Hours Goal" value={goal} onChange={e => setGoal(e.target.value)} style={{ marginBottom: 12, width: '100%' }} disabled={goalLoading} />
-        <button onClick={handleSetGoal} disabled={goalLoading}><FiSave style={{marginRight:8}} />Set Goal</button>
-      </div>
-      <div style={{ marginBottom: 32 }}>
-        <h3>Cancellation Pay</h3>
-        <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
-          Set how you want to handle cancellation pay for the month.
-        </p>
-        <Link to="/settings/cancellation-pay">
-          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiDollarSign style={{marginRight:4}} />Set Cancellation Pay</button>
-        </Link>
-      </div>
-      <div style={{ marginBottom: 32 }}>
-        <h3>Weekly Off Days</h3>
-        <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
-          Set days of the week that should automatically be marked as "OFF" in new months.
-        </p>
-        <Link to="/settings/weekly-off-days">
-          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiCalendar style={{marginRight:4}} />Set Weekly Off Days</button>
-        </Link>
-      </div>
-      <div style={{ marginBottom: 32 }}>
-        <Link to="/pay-structure">
-          <button style={{ background: '#23272A', color: '#4EA8FF', fontWeight: 600, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><FiSettings style={{marginRight:4}} />Set Pay Structure</button>
-        </Link>
-      </div>
-      {(success || error) && (
-        <div style={{ marginTop: 24, color: success ? '#4EA8FF' : 'salmon', fontWeight: 600 }}>
-          {success || error}
+
+        {/* Update Info */}
+        <div className="card" style={{ minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2em', borderRadius: 16, boxShadow: '0 2px 16px #4EA8FF22', background: 'rgba(35,39,42,0.97)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 22 }}><FiEdit style={{ color: '#4EA8FF', fontSize: 28 }} />Update Info</h3>
+          <input type="text" placeholder="Name" value={displayName} onChange={e => setDisplayName(e.target.value)} style={{ marginBottom: 12, width: '100%' }} />
+          <input type="email" placeholder="Email" value={email} disabled style={{ marginBottom: 12, width: '100%', opacity: 0.7 }} />
+          <button onClick={handleSaveInfo} style={{ background: '#4EA8FF', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', marginTop: 8 }}>Save Info</button>
+          {success && <div style={{ color: '#4EA8FF', marginTop: 12 }}>{success}</div>}
+          {error && <div style={{ color: 'salmon', marginTop: 12 }}>{error}</div>}
         </div>
-      )}
+
+        {/* Change Password */}
+        <div className="card" style={{ minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2em', borderRadius: 16, boxShadow: '0 2px 16px #4EA8FF22', background: 'rgba(35,39,42,0.97)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 22 }}><FiLock style={{ color: '#4EA8FF', fontSize: 28 }} />Change Password</h3>
+          <input type="password" placeholder="New Password" value={password} onChange={e => setPassword(e.target.value)} style={{ marginBottom: 12, width: '100%' }} />
+          <button onClick={handleChangePassword} disabled={!password} style={{ background: '#4EA8FF', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', marginTop: 8 }}>Change Password</button>
+          {success && <div style={{ color: '#4EA8FF', marginTop: 12 }}>{success}</div>}
+          {error && <div style={{ color: 'salmon', marginTop: 12 }}>{error}</div>}
+        </div>
+
+        {/* Monthly Goal */}
+        <div className="card" style={{ minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2em', borderRadius: 16, boxShadow: '0 2px 16px #4EA8FF22', background: 'rgba(35,39,42,0.97)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 22 }}><FiTarget style={{ color: '#4EA8FF', fontSize: 28 }} />Monthly Goal</h3>
+          <input type="number" placeholder="Monthly Hours Goal" value={goal} onChange={e => setGoal(e.target.value)} style={{ marginBottom: 12, width: '100%' }} disabled={goalLoading} />
+          <button onClick={handleSetGoal} disabled={goalLoading} style={{ background: '#4EA8FF', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '0.7em 1.2em', marginTop: 8 }}>Set Goal</button>
+          {success && <div style={{ color: '#4EA8FF', marginTop: 12 }}>{success}</div>}
+          {error && <div style={{ color: 'salmon', marginTop: 12 }}>{error}</div>}
+        </div>
+
+        {/* Cancellation Pay */}
+        <div className="card" style={{ minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2em', borderRadius: 16, boxShadow: '0 2px 16px #4EA8FF22', background: 'rgba(35,39,42,0.97)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 22 }}><FiDollarSign style={{ color: '#4EA8FF', fontSize: 28 }} />Cancellation Pay</h3>
+          <p style={{ fontSize: 14, color: '#b0c4d6', marginBottom: 16 }}>
+            Set how you want to handle cancellation pay for the month.
+          </p>
+          <Link to="/settings/cancellation-pay" style={{ textDecoration: 'none' }}>
+            <button style={{ background: '#4EA8FF', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '0.9em 1.7em', fontSize: 18, cursor: 'pointer', marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <FiDollarSign style={{marginRight:4}} />Set Cancellation Pay
+            </button>
+          </Link>
+        </div>
+
+        {/* Weekly Off Days */}
+        <div className="card" style={{ minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2em', borderRadius: 16, boxShadow: '0 2px 16px #4EA8FF22', background: 'rgba(35,39,42,0.97)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 22 }}><FiCalendar style={{ color: '#4EA8FF', fontSize: 28 }} />Weekly Off Days</h3>
+          <p style={{ fontSize: 14, color: '#b0c4d6', marginBottom: 16 }}>
+            Set days of the week that should automatically be marked as "OFF" in new months.
+          </p>
+          <Link to="/settings/weekly-off-days" style={{ textDecoration: 'none' }}>
+            <button style={{ background: '#4EA8FF', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '0.9em 1.7em', fontSize: 18, cursor: 'pointer', marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <FiCalendar style={{marginRight:4}} />Set Weekly Off Days
+            </button>
+          </Link>
+        </div>
+
+        {/* Pay Structure */}
+        <div className="card" style={{ minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2em', borderRadius: 16, boxShadow: '0 2px 16px #4EA8FF22', background: 'rgba(35,39,42,0.97)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 22 }}><FiSettings style={{ color: '#4EA8FF', fontSize: 28 }} />Pay Structure</h3>
+          <Link to="/pay-structure" style={{ textDecoration: 'none' }}>
+            <button style={{ background: '#4EA8FF', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '0.9em 1.7em', fontSize: 18, cursor: 'pointer', marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <FiSettings style={{marginRight:4}} />Set Pay Structure
+            </button>
+          </Link>
+        </div>
+
+        {/* Support & Help */}
+        <div className="card" style={{ minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2em', borderRadius: 16, boxShadow: '0 2px 16px #4EA8FF22', background: 'rgba(35,39,42,0.97)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 22 }}><FiLifeBuoy style={{ color: '#4EA8FF', fontSize: 28 }} />Support & Help</h3>
+          <Link to="/support" style={{ textDecoration: 'none' }}>
+            <button style={{ background: '#4EA8FF', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '0.9em 1.7em', fontSize: 18, cursor: 'pointer', marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <FiLifeBuoy style={{marginRight:4}} />Go to Support
+            </button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 } 

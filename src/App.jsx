@@ -18,6 +18,7 @@ import BulkEntry from './BulkEntry';
 import WeeklyOffDays from './WeeklyOffDays';
 import CancellationPay from './CancellationPay';
 import Endorsements from './Endorsements';
+import Support from './Support';
 import { auth } from './firebase';
 import { FiLogOut } from 'react-icons/fi';
 import { FaBell } from 'react-icons/fa';
@@ -100,6 +101,7 @@ function NavTabs({ onShowNotifications, notificationCount }) {
     { path: '/past-months', label: 'Past Months' },
     { path: '/endorsements', label: 'Endorsements' },
     { path: '/settings', label: 'Settings' },
+    { path: '/support', label: 'Support' },
   ];
 
   const handleLogout = async () => {
@@ -157,6 +159,7 @@ function AppRoutes() {
         <Route path="/settings/cancellation-pay" element={<CancellationPay />} />
         <Route path="/pay-structure" element={<PayStructure />} />
         <Route path="/endorsements" element={<Endorsements />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
     </>
   );
@@ -192,6 +195,7 @@ function App() {
         <Route path="/settings/cancellation-pay" element={<CancellationPay />} />
         <Route path="/pay-structure" element={<PayStructure />} />
         <Route path="/endorsements" element={<Endorsements />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
     </Router>
   );
