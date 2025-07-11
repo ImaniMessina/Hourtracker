@@ -1,8 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export default function FlightEntryForm({ values, onChange, onSubmit, loading, onCancel, showCancel }) {
-  const navigate = useNavigate();
   return (
     <form onSubmit={onSubmit} style={{
       display: 'flex',
@@ -61,14 +59,10 @@ export default function FlightEntryForm({ values, onChange, onSubmit, loading, o
         <span style={{ fontWeight: 600, color: '#bcdcff', fontSize: 15, letterSpacing: 1 }}>OFF</span>
       </div>
       <input type="text" value={values.notes || ''} onChange={e => onChange('notes', e.target.value)} placeholder="Notes (optional)" style={{ flex: '2 1 180px', minWidth: 180, padding: '0.7em', borderRadius: 8, border: '1px solid #444', background: '#23272A', color: '#fff', fontSize: 16 }} />
-      {/* Save and Bulk Entry Buttons Row */}
-      <div style={{ display: 'flex', gap: 16, width: '100%', marginTop: 8 }}>
-        <button type="submit" disabled={loading} style={{ flex: 1, background: 'linear-gradient(90deg, #4EA8FF 0%, #1E90FF 100%)', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '1em 0', fontSize: 18, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? 'Saving...' : 'Save'}</button>
-        <button type="button" onClick={() => navigate('/bulk-entry')} style={{ flex: 1, background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '1em 0', fontSize: 18, cursor: 'pointer' }}>Bulk Entry</button>
-        {showCancel && (
-          <button type="button" onClick={onCancel} style={{ flex: 1, background: '#444', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '1em 0', fontSize: 18, cursor: 'pointer' }}>Cancel</button>
-        )}
-      </div>
+      <button type="submit" disabled={loading} style={{ flex: '1 1 120px', minWidth: 120, background: 'linear-gradient(90deg, #4EA8FF 0%, #1E90FF 100%)', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '1em 0', fontSize: 18, cursor: loading ? 'not-allowed' : 'pointer', marginTop: 8 }}>{loading ? 'Saving...' : 'Save'}</button>
+      {showCancel && (
+        <button type="button" onClick={onCancel} style={{ flex: '1 1 120px', minWidth: 120, background: '#444', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '1em 0', fontSize: 18, cursor: 'pointer', marginTop: 8 }}>Cancel</button>
+      )}
     </form>
   );
 } 
