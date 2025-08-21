@@ -57,20 +57,20 @@ export default function FlightEntryForm({ values, onChange, onSubmit, loading, o
           className="dashboard-form-field"
         />
         
-        {/* OFF toggle */}
-        <div className="dashboard-off-toggle">
-          <button
-            type="button"
-            aria-pressed={values.off}
-            onClick={() => {
-              console.log('Toggle clicked! Current off state:', values.off);
-              onChange('off', !values.off);
-            }}
-            className={`off-toggle ${values.off ? 'active' : ''}`}
-          >
-            <span className="toggle-handle" />
-          </button>
-          <span className="off-label">{values.off ? 'ON' : 'OFF'}</span>
+        {/* OFF checkbox */}
+        <div className="dashboard-off-checkbox">
+          <label className="off-checkbox-label">
+            <input
+              type="checkbox"
+              checked={values.off}
+              onChange={(e) => {
+                console.log('Checkbox clicked! Current off state:', values.off);
+                onChange('off', e.target.checked);
+              }}
+              className="off-checkbox"
+            />
+            <span className="off-checkbox-text">OFF Day</span>
+          </label>
         </div>
       </div>
       
