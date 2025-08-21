@@ -3585,60 +3585,89 @@ body {
 
 .dashboard-save-btn {
   flex: 1;
-  background: linear-gradient(90deg, #4EA8FF 0%, #1E90FF 100%);
+  background: linear-gradient(135deg, #4EA8FF 0%, #1E90FF 100%);
   color: #fff;
   font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1em 0;
   font-size: 18px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px #4EA8FF33;
+  position: relative;
+  overflow: hidden;
 }
 
 .dashboard-save-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px #4EA8FF44;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px #4EA8FF44;
+  background: linear-gradient(135deg, #5BB8FF 0%, #2AA0FF 100%);
+}
+
+.dashboard-save-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px #4EA8FF44;
 }
 
 .dashboard-save-btn:disabled {
   cursor: not-allowed;
   opacity: 0.7;
+  transform: none;
 }
 
 .dashboard-bulk-btn {
   flex: 1;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
   font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1em 0;
   font-size: 18px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px #667eea33;
+  position: relative;
+  overflow: hidden;
 }
 
 .dashboard-bulk-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px #667eea44;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px #667eea44;
+  background: linear-gradient(135deg, #7788fb 0%, #865bb3 100%);
+}
+
+.dashboard-bulk-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px #667eea44;
 }
 
 .dashboard-cancel-btn {
   flex: 1;
-  background: #444;
+  background: linear-gradient(135deg, #555 0%, #444 100%);
   color: #fff;
   font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1em 0;
   font-size: 18px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px #00000033;
+  position: relative;
+  overflow: hidden;
 }
 
 .dashboard-cancel-btn:hover {
-  background: #555;
+  background: linear-gradient(135deg, #666 0%, #555 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px #00000044;
+}
+
+.dashboard-cancel-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px #00000044;
 }
 
 /* Responsive adjustments */
