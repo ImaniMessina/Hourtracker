@@ -3648,6 +3648,7 @@ body {
   justify-content: center;
   text-align: center;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .dashboard-bulk-btn:hover {
