@@ -3721,7 +3721,7 @@ body {
     min-width: 100%;
   }
   
-  .dashboard-off-toggle {
+  .dashboard-off-checkbox {
     flex: 1 1 100%;
     min-width: 100%;
     justify-content: center;

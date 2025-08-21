@@ -63,10 +63,7 @@ export default function FlightEntryForm({ values, onChange, onSubmit, loading, o
             <input
               type="checkbox"
               checked={values.off}
-              onChange={(e) => {
-                console.log('Checkbox clicked! Current off state:', values.off);
-                onChange('off', e.target.checked);
-              }}
+              onChange={(e) => onChange('off', e.target.checked)}
               className="off-checkbox"
             />
             <span className="off-checkbox-text">OFF Day</span>
