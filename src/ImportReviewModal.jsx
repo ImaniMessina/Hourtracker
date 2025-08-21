@@ -57,7 +57,7 @@ export default function ImportReviewModal({ open, onClose, onConfirm, entries: i
                     <td><input type="number" step="0.1" min="0" value={e.flight || ''} onChange={ev => handleChange(idx, 'flight', ev.target.value)} disabled={e.off} /></td>
                     <td><input type="number" step="0.1" min="0" value={e.prepost || ''} onChange={ev => handleChange(idx, 'prepost', ev.target.value)} disabled={e.off} /></td>
                     <td><input type="number" step="0.1" min="0" value={e.ground || ''} onChange={ev => handleChange(idx, 'ground', ev.target.value)} disabled={e.off} /></td>
-                    <td><input type="number" step="1" min="0" value={e.cancellations || ''} onChange={ev => handleChange(idx, 'cancellations', ev.target.value)} disabled={e.off} /></td>
+                    <td><input type="number" step="0.1" min="0" value={e.cancellations || ''} onChange={ev => handleChange(idx, 'cancellations', ev.target.value)} disabled={e.off} /></td>
                     <td><input type="checkbox" checked={!!e.off} onChange={ev => handleChange(idx, 'off', ev.target.checked)} /></td>
                     <td><input type="text" value={e.notes || ''} onChange={ev => handleChange(idx, 'notes', ev.target.value)} /></td>
                   </tr>

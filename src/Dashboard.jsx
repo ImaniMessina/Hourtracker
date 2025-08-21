@@ -282,7 +282,7 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
         flight: off ? 0 : parseFloat(flight) || 0,
         prepost: off ? 0 : parseFloat(prepost) || 0,
         ground: off ? 0 : parseFloat(ground) || 0,
-        cancellations: parseInt(cancellations) || 0,
+        cancellations: parseFloat(cancellations) || 0,
         off,
         notes: notes || '',
         created: Timestamp.now(),

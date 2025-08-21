@@ -286,7 +286,7 @@ export default function Settings() {
         const flight = parseFloat((rest.match(/([\d.]+)\s*FLIGHT/i) || [])[1] || 0);
         const prepost = parseFloat((rest.match(/([\d.]+)\s*PREPOST/i) || [])[1] || 0);
         const ground = parseFloat((rest.match(/([\d.]+)\s*GROUND/i) || [])[1] || 0);
-        const cancellations = parseInt((rest.match(/([\d.]+)\s*CANCELLATION/i) || [])[1] || 0);
+        const cancellations = parseFloat((rest.match(/([\d.]+)\s*CANCELLATION/i) || [])[1] || 0);
         const notes = '';
         entries.push({ date, flight: off ? 0 : flight, prepost: off ? 0 : prepost, ground: off ? 0 : ground, cancellations: off ? 0 : cancellations, off, notes });
       }
