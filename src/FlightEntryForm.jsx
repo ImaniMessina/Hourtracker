@@ -5,7 +5,7 @@ export default function FlightEntryForm({ values, onChange, onSubmit, loading, o
   const navigate = useNavigate();
   const [showAdvanced, setShowAdvanced] = useState(false);
   return (
-    <form onSubmit={onSubmit} style={{
+    <form onSubmit={onSubmit} className="dashboard-form" style={{
       display: 'flex',
       flexWrap: 'wrap',
       gap: 16,
