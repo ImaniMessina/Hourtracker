@@ -3648,7 +3648,13 @@ body {
   justify-content: center;
   text-align: center;
   line-height: 1.2;
-  white-space: nowrap;
+  white-space: normal;
+}
+
+.dashboard-bulk-btn br {
+  display: block;
+  content: "";
+  margin-top: 2px;
 }
 
 .dashboard-bulk-btn:hover {
