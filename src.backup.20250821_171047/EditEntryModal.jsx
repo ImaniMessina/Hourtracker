@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import FlightEntryForm from './FlightEntryForm';
 
 export default function EditEntryModal({ open, onClose, onSave, entry, loading }) {

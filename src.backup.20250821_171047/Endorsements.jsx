@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from './firebase';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, Timestamp, query, where, orderBy, doc, getDoc, onSnapshot, updateDoc, deleteDoc, getDocs } from 'firebase/firestore';
+import { motion } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaFileAlt, FaCalendarAlt, FaCheckCircle, FaTimesCircle, FaUser } from 'react-icons/fa';
 
 export default function Endorsements() {
@@ -493,13 +494,14 @@ export default function Endorsements() {
                 </label>
               </div>
               <div className="form-actions">
-                <button
+                <motion.button
                   type="submit"
                   disabled={loading}
+                  whileTap={{ scale: 0.97 }}
                   className="primary-btn"
                 >
                   {loading ? 'Saving...' : (editingTemplate ? 'Update Template' : 'Create Template')}
-                </button>
+                </motion.button>
                 {editingTemplate && (
                   <button
                     type="button"
@@ -626,13 +628,14 @@ export default function Endorsements() {
                 />
               </div>
               <div className="form-actions">
-                <button
+                <motion.button
                   type="submit"
                   disabled={loading}
+                  whileTap={{ scale: 0.97 }}
                   className="primary-btn"
                 >
                   {loading ? 'Saving...' : (editingEndorsement ? 'Update Endorsement' : 'Record Endorsement')}
-                </button>
+                </motion.button>
                 {editingEndorsement && (
                   <button
                     type="button"

@@ -136,7 +136,7 @@ export default function FlightEntryForm({ values, onChange, onSubmit, loading, o
           onClick={() => navigate('/bulk-entry')} 
           className="dashboard-bulk-btn"
         >
-          Bulk Entry
+          Bulk<br />Entry
         </button>
         {showCancel && (
           <button 

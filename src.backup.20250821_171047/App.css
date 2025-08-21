@@ -3655,11 +3655,15 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 1.2;
+  white-space: normal;
 }
 
-
+.dashboard-bulk-btn br {
+  display: block;
+  content: "";
+  margin-top: 2px;
+}
 
 .dashboard-bulk-btn:hover {
   transform: translateY(-2px);

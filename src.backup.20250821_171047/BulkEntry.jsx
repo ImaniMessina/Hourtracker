@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from './firebase';
 import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { FiCalendar, FiHome, FiSave, FiPlus, FiTrash2 } from 'react-icons/fi';
 
 const emptyEntry = (date) => ({
@@ -85,7 +86,7 @@ const BulkEntry = () => {
 
   return (
     <div className="container">
-      <div 
+      <motion.div 
         className="card"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -110,7 +111,7 @@ const BulkEntry = () => {
                 <input type="checkbox" checked={current.off} onChange={e => handleChange('off', e.target.checked)} /> OFF
             </label>
               <input type="text" placeholder="Notes" value={current.notes} onChange={e => handleChange('notes', e.target.value)} className="bulk-input bulk-notes-input" />
-              <button 
+              <motion.button 
                 type="button" 
                 onClick={handleAddEntry}
                 whileHover={{ scale: 1.05 }}
@@ -118,7 +119,7 @@ const BulkEntry = () => {
                 className="bulk-add-btn"
               >
                 <FiPlus /> Add Entry
-              </button>
+              </motion.button>
             </div>
           </div>
 
@@ -163,7 +164,7 @@ const BulkEntry = () => {
           )}
 
           <div className="bulk-action-buttons">
-            <button 
+            <motion.button 
               type="submit" 
               disabled={isSubmitting || entries.length === 0}
               whileHover={{ scale: 1.05 }}
@@ -172,8 +173,8 @@ const BulkEntry = () => {
             >
               <FiSave />
               {isSubmitting ? 'Saving...' : 'Save All Entries'}
-            </button>
-            <button 
+            </motion.button>
+            <motion.button 
               type="button" 
               onClick={handleGoHome}
               whileHover={{ scale: 1.05 }}
@@ -182,10 +183,10 @@ const BulkEntry = () => {
             >
               <FiHome />
               Cancel
-            </button>
+            </motion.button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

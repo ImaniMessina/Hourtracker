@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, Timestamp, query, where, orderBy, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { motion } from 'framer-motion';
 import { FaPlane, FaPencilAlt, FaBook, FaBell, FaExclamationTriangle, FaCalendarAlt, FaTimes } from 'react-icons/fa';
 import FlightEntryForm from './FlightEntryForm';
 
@@ -33,11 +34,14 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
   const [cancellations, setCancellations] = useState('');
   const [off, setOff] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
   const [entries, setEntries] = useState([]);
   const [fetching, setFetching] = useState(false);
   const navigate = useNavigate();
   const [goal, setGoal] = useState(null);
   const [goalLoading, setGoalLoading] = useState(true);
+  const [payBlocks, setPayBlocks] = useState([]);
   const [notes, setNotes] = useState('');
 
   // Notification system state
@@ -48,13 +52,10 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => {
       setUser(u);
-      // Only navigate if we're certain there's no user and we're not already loading
-      if (!u && !goalLoading) {
-        navigate('/login');
-      }
+      if (!u) navigate('/login');
     });
     return () => unsubscribe();
-  }, [navigate, goalLoading]);
+  }, [navigate]);
 
   useEffect(() => {
     if (!user) return;
@@ -81,8 +82,10 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (userDoc.exists()) {
         setGoal(userDoc.data().monthlyGoal ? Number(userDoc.data().monthlyGoal) : null);
+        setPayBlocks(userDoc.data().payBlocks || []);
       } else {
         setGoal(null);
+        setPayBlocks([]);
       }
       setGoalLoading(false);
     };
@@ -265,11 +268,13 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
     }
     return pay;
   }
-  const estimatedPay = calculateEstimatedPay(totals.total, []); // payBlocks is removed, so pass an empty array
+  const estimatedPay = calculateEstimatedPay(totals.total, payBlocks);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
+    setSuccess('');
     try {
       const newEntry = {
         uid: user.uid,
@@ -277,12 +282,13 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
         flight: off ? 0 : parseFloat(flight) || 0,
         prepost: off ? 0 : parseFloat(prepost) || 0,
         ground: off ? 0 : parseFloat(ground) || 0,
-        cancellations: parseFloat(cancellations) || 0,
+        cancellations: parseInt(cancellations) || 0,
         off,
         notes: notes || '',
         created: Timestamp.now(),
       };
       await addDoc(collection(db, 'hours'), newEntry);
+      setSuccess('Saved!');
       setFlight('');
       setPrepost('');
       setGround('');
@@ -290,7 +296,7 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
       setOff(false);
       setNotes('');
     } catch (err) {
-      console.error('Error saving entry:', err);
+      setError('Error saving entry.');
     }
     setLoading(false);
   };
@@ -303,8 +309,11 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
   return (
     <div className="dashboard-immersive-bg">
       {/* Top bar with month, total hours, and logout icon */}
-      <div
+      <motion.div
         className="card"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
         style={{ position: 'relative', paddingTop: '2.5em' }}
       >
         {/* Notification Dropdown Only (no bell/logout button) */}
@@ -488,7 +497,7 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
             </table>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 } 
