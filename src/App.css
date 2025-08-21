@@ -3606,6 +3606,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .dashboard-save-btn:hover:not(:disabled) {
@@ -3644,6 +3646,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .dashboard-bulk-btn:hover {
@@ -3676,6 +3680,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .dashboard-cancel-btn:hover {
