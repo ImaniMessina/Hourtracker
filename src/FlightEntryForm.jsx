@@ -62,12 +62,15 @@ export default function FlightEntryForm({ values, onChange, onSubmit, loading, o
           <button
             type="button"
             aria-pressed={values.off}
-            onClick={() => onChange('off', !values.off)}
+            onClick={() => {
+              console.log('Toggle clicked! Current off state:', values.off);
+              onChange('off', !values.off);
+            }}
             className={`off-toggle ${values.off ? 'active' : ''}`}
           >
             <span className="toggle-handle" />
           </button>
-          <span className="off-label">OFF</span>
+          <span className="off-label">{values.off ? 'ON' : 'OFF'}</span>
         </div>
       </div>
       
