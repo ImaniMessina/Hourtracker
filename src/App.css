@@ -3581,10 +3581,12 @@ body {
   gap: 16px;
   width: 100%;
   margin-top: 8px;
+  align-items: stretch;
 }
 
 .dashboard-save-btn {
   flex: 1;
+  min-width: 0;
   background: linear-gradient(135deg, #4EA8FF 0%, #1E90FF 100%);
   color: #fff;
   font-weight: 700;
@@ -3597,6 +3599,10 @@ body {
   box-shadow: 0 4px 16px #4EA8FF33;
   position: relative;
   overflow: hidden;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dashboard-save-btn:hover:not(:disabled) {
@@ -3618,6 +3624,7 @@ body {
 
 .dashboard-bulk-btn {
   flex: 1;
+  min-width: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
   font-weight: 700;
@@ -3630,6 +3637,10 @@ body {
   box-shadow: 0 4px 16px #667eea33;
   position: relative;
   overflow: hidden;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dashboard-bulk-btn:hover {
@@ -3645,6 +3656,7 @@ body {
 
 .dashboard-cancel-btn {
   flex: 1;
+  min-width: 0;
   background: linear-gradient(135deg, #555 0%, #444 100%);
   color: #fff;
   font-weight: 700;
@@ -3657,6 +3669,10 @@ body {
   box-shadow: 0 4px 16px #00000033;
   position: relative;
   overflow: hidden;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dashboard-cancel-btn:hover {
