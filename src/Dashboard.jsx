@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from './firebase';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, Timestamp, query, where, orderBy, doc, getDoc, onSnapshot } from 'firebase/firestore';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 import { FaPlane, FaPencilAlt, FaBook, FaBell, FaExclamationTriangle, FaCalendarAlt, FaTimes } from 'react-icons/fa';
 import FlightEntryForm from './FlightEntryForm';
 
@@ -39,6 +37,7 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
   const [goal, setGoal] = useState(null);
   const [goalLoading, setGoalLoading] = useState(true);
   const [notes, setNotes] = useState('');
+  const [payBlocks, setPayBlocks] = useState([]);
 
   // Notification system state
   const [expiringEndorsements, setExpiringEndorsements] = useState([]);
@@ -81,8 +80,10 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (userDoc.exists()) {
         setGoal(userDoc.data().monthlyGoal ? Number(userDoc.data().monthlyGoal) : null);
+        setPayBlocks(userDoc.data().payBlocks || []);
       } else {
         setGoal(null);
+        setPayBlocks([]);
       }
       setGoalLoading(false);
     };
@@ -265,7 +266,7 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
     }
     return pay;
   }
-  const estimatedPay = calculateEstimatedPay(totals.total, []); // payBlocks is removed, so pass an empty array
+  const estimatedPay = calculateEstimatedPay(totals.total, payBlocks);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -382,46 +383,46 @@ export default function Dashboard({ showNotifications, setShowNotifications, not
         )}
 
         <div className="dashboard-topbar" style={{ position: 'relative' }}>
-          <div className="dashboard-heading-wrap">
-            <div className="dashboard-monthyear">{monthYear}</div>
-            <div className="dashboard-progress-row">
-              <div className="dashboard-progress-circle">
-                <CircularProgressbar
-                  value={goal ? progress : 0}
-                  maxValue={100}
-                  text={`${totals.total.toFixed(1)}`}
-                  styles={buildStyles({
-                    pathColor: '#4EA8FF',
-                    trailColor: '#23272A',
-                    textColor: '#fff',
-                    textSize: '1.5rem',
-                    pathTransitionDuration: 0.7,
-                    strokeLinecap: 'round',
-                    trailWidth: 6,
-                    pathWidth: 8,
-                    backgroundColor: 'rgba(24,26,27,0.7)',
-                    fontWeight: 700,
-                    fontFamily: 'Montserrat, Arial, sans-serif',
-                  })}
-                />
+          <div className="dashboard-main-content">
+            {/* One Big Goal Panel - Contains Everything */}
+            <div className="dashboard-goal-panel">
+              {/* Header Section */}
+              <div className="goal-panel-header">
+                <div className="goal-panel-month">{monthYear}</div>
+                <div className="goal-panel-hours">
+                  <div className="goal-panel-hours-number">{totals.total.toFixed(1)}</div>
+                  <div className="goal-panel-hours-label">TOTAL HOURS</div>
+                </div>
               </div>
-              <div className="dashboard-total-label">TOTAL HOURS</div>
+              
+              {/* Goal Content Section */}
+              {goal && (
+                <div className="goal-panel-content">
+                  <div className="goal-header">
+                    <div className="goal-plane-icon">
+                      <FaPlane size={32} color="#4EA8FF" />
+                    </div>
+                    <div className="goal-header-text">
+                      <span className="goal-title">MONTHLY GOAL</span>
+                      <span className="goal-target">Target: {goal} hours</span>
+                    </div>
+                    <div className="goal-pay-info">
+                      <div className="goal-pay-number">${estimatedPay.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
+                      <div className="goal-pay-label">ESTIMATED PAY</div>
+                    </div>
+                  </div>
+                  <div className="goal-progress-info">
+                    <div className="goal-message">
+                      {hoursLeft > 0 ? `${hoursLeft.toFixed(1)} hours left to reach your goal!` : 'Goal reached! 🎉'}
+                    </div>
+                    <div className="goal-progress-bar">
+                      <div className="goal-progress-fill" style={{ width: `${Math.min(progress, 100)}%` }}></div>
+                    </div>
+                    <div className="goal-percentage">{Math.round(progress)}% Complete</div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-        {/* Premium Goal/Pay Card */}
-        <div className="dashboard-goalpay-card elevated">
-          <div className="goalpay-icon-accent">
-            <FaPlane size={32} color="#4EA8FF" />
-          </div>
-          <div className="goalpay-flex">
-            <span className="goalpay-hoursleft">
-              {goalLoading ? 'Loading…' : goal === null ? 'Set your monthly goal in Settings' : hoursLeft > 0 ? `${hoursLeft.toFixed(1)} hours left to reach your goal of ${goal}!` : 'Goal reached! 🎉'}
-            </span>
-            <span className="goalpay-divider" />
-            <span className="goalpay-estpay">
-              Estimated Pay: <span className="goalpay-payval">${estimatedPay.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-            </span>
           </div>
         </div>
         {/* Main content: responsive grid for form and table */}
