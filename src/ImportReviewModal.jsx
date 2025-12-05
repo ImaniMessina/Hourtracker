@@ -20,7 +20,7 @@ export default function ImportReviewModal({ open, onClose, onConfirm, entries: i
 
   return (
     <div
-      className="modal-backdrop"
+        className="modal-backdrop"
       style={{
         position: 'fixed',
         top: 0,
@@ -33,9 +33,9 @@ export default function ImportReviewModal({ open, onClose, onConfirm, entries: i
         alignItems: 'center',
         zIndex: 1000,
       }}
-    >
+      >
       <div
-        className="modal-card"
+          className="modal-card"
         style={{
           backgroundColor: '#fff',
           borderRadius: '8px',
@@ -47,9 +47,9 @@ export default function ImportReviewModal({ open, onClose, onConfirm, entries: i
         }}
       >
         <h2 style={{ marginBottom: '15px', textAlign: 'center' }}>Review Imported Entries</h2>
-        <div style={{ maxHeight: 400, overflowY: 'auto', margin: '1.5em 0' }}>
+          <div style={{ maxHeight: 400, overflowY: 'auto', margin: '1.5em 0' }}>
           <table className="import-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
+              <thead>
               <tr style={{ backgroundColor: '#f0f0f0' }}>
                 <th style={{ padding: '10px', textAlign: 'left' }}>Date</th>
                 <th style={{ padding: '10px', textAlign: 'left' }}>Flight</th>
@@ -58,10 +58,10 @@ export default function ImportReviewModal({ open, onClose, onConfirm, entries: i
                 <th style={{ padding: '10px', textAlign: 'left' }}>Cancellations</th>
                 <th style={{ padding: '10px', textAlign: 'left' }}>OFF</th>
                 <th style={{ padding: '10px', textAlign: 'left' }}>Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {entries.map((e, idx) => (
+                </tr>
+              </thead>
+              <tbody>
+                {entries.map((e, idx) => (
                 <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
                   <td style={{ padding: '10px' }}>
                     <input type="date" value={e.date || ''} onChange={ev => handleChange(idx, 'date', ev.target.value)} style={{ width: '100%' }} />
@@ -84,11 +84,11 @@ export default function ImportReviewModal({ open, onClose, onConfirm, entries: i
                   <td style={{ padding: '10px' }}>
                     <input type="text" value={e.notes || ''} onChange={ev => handleChange(idx, 'notes', ev.target.value)} style={{ width: '100%' }} />
                   </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
           <button
             type="button"
@@ -136,6 +136,6 @@ export default function ImportReviewModal({ open, onClose, onConfirm, entries: i
           </button>
         </div>
       </div>
-    </div>
+          </div>
   );
 } 
